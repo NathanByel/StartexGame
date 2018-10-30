@@ -11,19 +11,22 @@ public class StartexGame extends ApplicationAdapter {
 	public static final int V_WIDTH = 1080;
 	public static final int V_HEIGHT = 1920;
 
-    private OrthographicCamera cam;
     private SpriteBatch batch;
     private Texture background;
-	
+
+    private Cat cat;
+
 	@Override
 	public void create () {
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, V_WIDTH, V_HEIGHT);
+		OrthographicCamera camera = new OrthographicCamera();
+        camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
 
 		batch = new SpriteBatch();
-        batch.setProjectionMatrix(cam.combined);
+		batch.setProjectionMatrix(camera.combined);
 
 		background = new Texture("background.jpg");
+        cat = new Cat();
+        new CatController(cat, camera);
 	}
 
 	@Override
@@ -32,6 +35,7 @@ public class StartexGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.draw(background, 0, 0);
+		cat.render(batch);
 		batch.end();
 	}
 	
