@@ -9,14 +9,12 @@ import com.badlogic.gdx.math.Vector3;
 
 public final class CatController implements InputProcessor {
     private Cat cat;
-    private OrthographicCamera camera;
     private Vector2 direction = new Vector2(0,0);
     private Vector3 coord3d = new Vector3();
     private Vector2 coord2d = new Vector2();
 
-    public CatController(Cat cat, OrthographicCamera camera) {
+    public CatController(Cat cat) {
         this.cat = cat;
-        this.camera = camera;
         Gdx.input.setInputProcessor(this);
     }
 
@@ -55,7 +53,7 @@ public final class CatController implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         coord3d.set(screenX, screenY, 0);
-        camera.unproject(coord3d);
+        StartexGame.getCamera().unproject(coord3d);
         coord2d.set(coord3d.x, coord3d.y);
 
         cat.goTo(coord2d);
