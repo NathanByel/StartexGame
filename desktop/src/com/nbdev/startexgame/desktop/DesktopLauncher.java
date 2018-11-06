@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.nbdev.startexgame.StartexGame;
 
 public class DesktopLauncher {
-	public static final float DESKTOP_SCALE = 2.5f;
+	public static final float DESKTOP_SCALE = 3f;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
