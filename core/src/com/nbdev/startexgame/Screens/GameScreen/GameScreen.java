@@ -10,26 +10,29 @@ import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
 import com.nbdev.startexgame.Pools.BulletPool;
+import com.nbdev.startexgame.Pools.EnemyPool;
 
 public class GameScreen extends BaseScreen {
     private final Game game;
     private Texture background;
-    private TextureAtlas mainAtlas;
 
     private Player player;
-    private Enemy enemy;
     private Vector2 direction;
     private BulletPool bulletPool;
+    private EnemyPool enemyPool;
+    private long oldTime;
+
+
+    public static TextureAtlas textureAtlas = new TextureAtlas("mainAtlas.tpack");
 
     public GameScreen(final Game game) {
         this.game = game;
         direction = new Vector2(0,0);
         background = new Texture("background.jpg");
-        mainAtlas = new TextureAtlas("mainAtlas.tpack");
 
-        bulletPool = new BulletPool();
-        player = new Player(mainAtlas, bulletPool);
-        enemy = new Enemy(mainAtlas);
+        enemyPool = new EnemyPool();
+        bulletPool = new BulletPool(enemyPool);
+        player = new Player(bulletPool);
     }
 
     @Override
@@ -39,9 +42,21 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
-        enemy.update(delta);
         player.update(delta);
         bulletPool.update(delta);
+        enemyPool.update(delta);
+
+        long time = System.currentTimeMillis();
+        if(time - oldTime > 3000) {
+            oldTime = time;
+            Enemy enemy = enemyPool.obtain();
+            enemy.set(
+                    new Vector2((float)(Math.random() * GameScreen.V_WIDTH), GameScreen.V_HEIGHT),
+                    new Vector2(0, -100f),
+                    100,
+                    5
+            );
+        }
     }
 
     private void draw() {
@@ -51,8 +66,8 @@ public class GameScreen extends BaseScreen {
 
         batch.draw(background, 0, 0);
         player.draw(batch);
-        enemy.draw(batch);
         bulletPool.draw(batch);
+        enemyPool.draw(batch);
 
         batch.end();
     }
@@ -76,67 +91,6 @@ public class GameScreen extends BaseScreen {
         if(button == 0) {
             player.shot();
         }
-        return false;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        /*switch(keycode) {
-            case Input.Keys.LEFT:
-            case Input.Keys.A:
-                direction.x = -1;
-                break;
-
-            case Input.Keys.RIGHT:
-            case Input.Keys.D:
-                direction.x = 1;
-                break;
-
-            case Input.Keys.UP:
-            case Input.Keys.W:
-                direction.y = 1;
-                break;
-
-            case Input.Keys.DOWN:
-            case Input.Keys.S:
-                direction.y = -1;
-                break;
-        }
-        if(!direction.isZero()) {
-            cat.moveDirection(direction);
-        }*/
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        /*switch(keycode) {
-            case Input.Keys.LEFT:
-            case Input.Keys.A:
-                direction.x = 0;
-                break;
-
-            case Input.Keys.RIGHT:
-            case Input.Keys.D:
-                direction.x = 0;
-                break;
-
-            case Input.Keys.UP:
-            case Input.Keys.W:
-                direction.y = 0;
-                break;
-
-            case Input.Keys.DOWN:
-            case Input.Keys.S:
-                direction.y = 0;
-                break;
-        }
-
-        if(direction.isZero()) {
-            cat.stop();
-        } else {
-            cat.moveDirection(direction);
-        }*/
         return false;
     }
 }

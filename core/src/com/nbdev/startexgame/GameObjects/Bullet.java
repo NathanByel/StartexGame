@@ -5,18 +5,17 @@ import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.Sprite;
 import com.nbdev.startexgame.Rect;
 
-public class Bullet extends Sprite implements Pool.Poolable {
-
-    public boolean alive;
+public class Bullet extends GameObject implements Pool.Poolable {
     private Rect worldBounds;
     private Vector2 v = new Vector2();
     private int damage;
     private Object owner;
 
     public Bullet() {
+        super(0);
+        canGetDamage = false;
     }
 
     public void set(

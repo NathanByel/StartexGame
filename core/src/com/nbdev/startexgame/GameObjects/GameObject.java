@@ -1,11 +1,13 @@
 package com.nbdev.startexgame.GameObjects;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.nbdev.startexgame.Sprite;
 
-public class GameObject extends Sprite {
+public class GameObject extends Sprite implements Disposable {
     protected int health;
-
+    public boolean alive;
+    protected boolean canGetDamage;
 
     public GameObject(int health) {
         this(new Vector2(0f, 0f));
@@ -26,5 +28,9 @@ public class GameObject extends Sprite {
 
     public Vector2 getPos() {
         return pos;
+    }
+
+    @Override
+    public void dispose() {
     }
 }

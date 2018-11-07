@@ -1,12 +1,13 @@
 package com.nbdev.startexgame.Pools;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.GameObjects.Bullet;
+import com.nbdev.startexgame.GameObjects.Enemy;
 
 public class BulletPool {
+    EnemyPool enemyPool;
 
     // Массив, содержащий активные пули.
     private final Array<Bullet> activeBullets = new Array<Bullet>();
@@ -18,6 +19,10 @@ public class BulletPool {
             return new Bullet();
         }
     };
+
+    public BulletPool(EnemyPool enemyPool) {
+        this.enemyPool = enemyPool;
+    }
 
 
     public Bullet obtain() {
@@ -32,6 +37,13 @@ public class BulletPool {
         for (int i = activeBullets.size; --i >= 0;) {
             Bullet item = activeBullets.get(i);
             if (item.alive) {
+                for (Enemy enemy : enemyPool.getActive()) {
+                    if( !item.isOutside(enemy) ) {
+                        enemy.damage(item.getDamage());
+                        item.alive = false;
+                    }
+                }
+
                 item.update(delta);
             } else {
                 activeBullets.removeIndex(i);

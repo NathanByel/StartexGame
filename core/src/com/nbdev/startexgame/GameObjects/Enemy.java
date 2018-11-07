@@ -1,20 +1,28 @@
 package com.nbdev.startexgame.GameObjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.HealthBar;
+import com.nbdev.startexgame.Pools.EnemyPool;
+import com.nbdev.startexgame.Screens.GameScreen.GameScreen;
 
 public class Enemy extends GameObject {
-    HealthBar healthBar;
+    private HealthBar healthBar;
+    private EnemyPool enemyPool;
+    private Vector2 v = new Vector2();
+    private static Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
+    private static Sound destroyedSound = Gdx.audio.newSound(Gdx.files.internal("sound/destroyed.mp3"));
 
-    public Enemy(TextureAtlas textureAtlas) {
+    public Enemy() {
         super(100);
+        canGetDamage = true;
 
-        this.textureRegion = textureAtlas.findRegion("enemy0");
+        this.enemyPool = enemyPool;
+        this.textureRegion = GameScreen.textureAtlas.findRegion("enemy0");
         healthBar = new HealthBar((int)(textureRegion.getRegionWidth() * 0.8f), 5, Color.GREEN, Color.BLACK);
         healthBar.setRange(0f, 100f);
         healthBar.setValue(health);
@@ -25,9 +33,27 @@ public class Enemy extends GameObject {
         setWidth(textureRegion.getRegionWidth());
     }
 
+    public void set(
+            Vector2 pos0,
+            Vector2 v0,
+            int health,
+            int damage
+    ) {
+        this.pos.set(pos0);
+        this.v.set(v0);
+        this.health = health;
+        alive = true;
+    }
+
+
     @Override
     public void update(float delta) {
         super.update(delta);
+        this.pos.mulAdd(v, delta);
+
+        if (pos.y < 0) {
+            alive = false;
+        }
     }
 
     @Override
@@ -37,5 +63,17 @@ public class Enemy extends GameObject {
         healthBar.setValue(health);
         healthBar.act(Gdx.graphics.getDeltaTime());
         healthBar.draw(batch, 1f);
+    }
+
+    public void damage(int damage) {
+        int dh = health - damage;
+        if(dh <= 0) {
+            health = 0;
+            alive = false;
+            destroyedSound.play();
+        } else {
+            health = dh;
+            damageSound.play();
+        }
     }
 }

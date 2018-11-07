@@ -2,23 +2,22 @@ package com.nbdev.startexgame.GameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.Pools.BulletPool;
+import com.nbdev.startexgame.Screens.GameScreen.GameScreen;
 
 public class Player extends GameObject {
-    TextureAtlas textureAtlas;
-    Sound shotSound;
-    BulletPool bulletPool;
+    private Sound shotSound;
+    private BulletPool bulletPool;
 
-    public Player(TextureAtlas textureAtlas, BulletPool bulletPool) {
+    public Player(BulletPool bulletPool) {
         super(100);
-        this.textureAtlas = textureAtlas;
+        canGetDamage = true;
         this.bulletPool = bulletPool;
-        shotSound = Gdx.audio.newSound(Gdx.files.internal("s.mp3"));
+        shotSound = Gdx.audio.newSound(Gdx.files.internal("sound/shot.mp3"));
 
-        this.textureRegion = textureAtlas.findRegion("main_ship");
+        this.textureRegion = GameScreen.textureAtlas.findRegion("main_ship");
         setPos(new Vector2(BaseScreen.V_WIDTH / 2, 200));
 
         setHeight(textureRegion.getRegionHeight());
@@ -29,13 +28,19 @@ public class Player extends GameObject {
         Bullet bullet = bulletPool.obtain();
         bullet.set(
                 this,
-                textureAtlas.findRegion("bulletMainShip"),
+                GameScreen.textureAtlas.findRegion("bulletMainShip"),
                 getPos(),
-                new Vector2(0f, 300f),
+                new Vector2(0f, 500f),
                 0,
                 null,
                 20);
 
-        shotSound.play(1.0f);
+        shotSound.play();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        shotSound.dispose();
     }
 }
