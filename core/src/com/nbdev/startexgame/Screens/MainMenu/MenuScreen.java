@@ -21,7 +21,7 @@ public class MenuScreen extends BaseScreen {
     public MenuScreen(final Game game) {
         this.game = game;
         background = new Texture("background.jpg");
-        textureAtlas = new TextureAtlas("menu/menu.pack");
+        textureAtlas = new TextureAtlas("menu/menu.tpack");
         buttonPlay = new ButtonPlay(new Vector2(100, 200), textureAtlas) {
             @Override
             public void buttonUp() {
