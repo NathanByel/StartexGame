@@ -6,12 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.GameObjects.Bullet;
 import com.nbdev.startexgame.GameObjects.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
+import com.nbdev.startexgame.Pools.BulletPool;
 
 public class GameScreen extends BaseScreen {
     private final Game game;
@@ -21,17 +19,7 @@ public class GameScreen extends BaseScreen {
     private Player player;
     private Enemy enemy;
     private Vector2 direction;
-
-    // Массив, содержащий активные пули.
-    private final Array<Bullet> activeBullets = new Array<Bullet>();
-
-    // Пул для пуль.
-    private final Pool<Bullet> bulletPool = new Pool<Bullet>() {
-        @Override
-        protected Bullet newObject() {
-            return new Bullet();
-        }
-    };
+    private BulletPool bulletPool;
 
     public GameScreen(final Game game) {
         this.game = game;
@@ -39,7 +27,8 @@ public class GameScreen extends BaseScreen {
         background = new Texture("background.jpg");
         mainAtlas = new TextureAtlas("mainAtlas.tpack");
 
-        player = new Player(mainAtlas);
+        bulletPool = new BulletPool();
+        player = new Player(mainAtlas, bulletPool);
         enemy = new Enemy(mainAtlas);
     }
 
@@ -52,17 +41,7 @@ public class GameScreen extends BaseScreen {
     private void update(float delta) {
         enemy.update(delta);
         player.update(delta);
-
-        // пули
-        for (int i = activeBullets.size; --i >= 0;) {
-            Bullet item = activeBullets.get(i);
-            if (item.alive) {
-                item.update(delta);
-            } else {
-                activeBullets.removeIndex(i);
-                bulletPool.free(item);
-            }
-        }
+        bulletPool.update(delta);
     }
 
     private void draw() {
@@ -73,12 +52,7 @@ public class GameScreen extends BaseScreen {
         batch.draw(background, 0, 0);
         player.draw(batch);
         enemy.draw(batch);
-
-        for (Bullet activeBullet : activeBullets) {
-            if(activeBullet.alive) {
-                activeBullet.draw(batch);
-            }
-        }
+        bulletPool.draw(batch);
 
         batch.end();
     }
@@ -100,17 +74,6 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 coord2d, int pointer, int button) {
         System.out.println(button);
         if(button == 0) {
-            Bullet item = bulletPool.obtain();
-            item.set(
-                    player,
-                    mainAtlas.findRegion("bulletMainShip"),
-                    player.getPos(),
-                    new Vector2(0f, 300f),
-                    0,
-                    null,
-                    20);
-
-            activeBullets.add(item);
             player.shot();
         }
         return false;
