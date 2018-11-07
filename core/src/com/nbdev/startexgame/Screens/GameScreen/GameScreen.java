@@ -1,25 +1,25 @@
 package com.nbdev.startexgame.Screens;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.Cat;
 import com.nbdev.startexgame.CatController;
-import com.nbdev.startexgame.StartexGame;
 
-public class GameScreen extends StartexGame implements CurrentScreen {
+public class GameScreen extends BaseScreen {
+    private final Game game;
     private Texture background;
     private Cat cat;
 
-    public GameScreen() {
+    public GameScreen(final Game game) {
+        this.game = game;
         background = new Texture("background.jpg");
         cat = new Cat();
         new CatController(cat);
-        StartexGame.setScreen(this);
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render(float delta) {
         batch.draw(background, 0, 0);
         cat.render(batch);
     }
