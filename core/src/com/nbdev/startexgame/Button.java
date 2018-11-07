@@ -23,9 +23,9 @@ public abstract class Button {
                     0);
     }
 
-    public boolean isButton(Vector2 coord) {
-        return  (coord.x > pos.x) && (coord.x < pos.x + region.getRegionWidth()) &&
-                (coord.y > pos.y) && (coord.y < pos.y + region.getRegionHeight());
+    public boolean isButton(Vector2 coord2d) {
+        return  (coord2d.x > pos.x) && (coord2d.x < pos.x + region.getRegionWidth()) &&
+                (coord2d.y > pos.y) && (coord2d.y < pos.y + region.getRegionHeight());
     }
 
     public void mouseIn() {
@@ -36,6 +36,37 @@ public abstract class Button {
         scale = 1f;
     }
 
-    public abstract void buttonDown();
-    public abstract void buttonUp();
+    public boolean touchDown(Vector2 coord2d, int pointer, int button) {
+        if(isButton(coord2d)) {
+            buttonDown();
+        }
+
+        return false;
+    }
+
+    public boolean touchUp(Vector2 coord2d, int pointer, int button) {
+        if(isButton(coord2d)) {
+            buttonUp();
+        }
+
+        return false;
+    }
+
+    public boolean mouseMoved(Vector2 coord2d) {
+        if(isButton(coord2d)) {
+            mouseIn();
+        } else {
+            mouseOut();
+        }
+
+        return false;
+    }
+
+    public void buttonDown() {
+
+    }
+
+    public void buttonUp() {
+
+    }
 }
