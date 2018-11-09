@@ -1,4 +1,4 @@
-package com.nbdev.startexgame;
+package com.nbdev.startexgame.utils;
 
 import com.badlogic.gdx.math.Vector2;
 

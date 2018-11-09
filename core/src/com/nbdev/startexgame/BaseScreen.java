@@ -98,6 +98,12 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        unprojectCoord(coord2d, screenX, screenY);
+        touchDragged(coord2d, pointer);
+        return false;
+    }
+
+    public boolean touchDragged(Vector2 coord2d, int pointer) {
         return false;
     }
 

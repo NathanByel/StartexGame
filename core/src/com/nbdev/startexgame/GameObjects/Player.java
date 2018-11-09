@@ -3,21 +3,20 @@ package com.nbdev.startexgame.GameObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.Pools.BulletPool;
-import com.nbdev.startexgame.Screens.GameScreen.GameScreen;
+import com.nbdev.startexgame.utils.Regions;
 
 public class Player extends GameObject {
     private Sound shotSound;
-    private BulletPool bulletPool;
 
-    public Player(BulletPool bulletPool) {
+    public Player() {
         super(100);
         canGetDamage = true;
-        this.bulletPool = bulletPool;
         shotSound = Gdx.audio.newSound(Gdx.files.internal("sound/shot.mp3"));
 
-        this.textureRegion = GameScreen.textureAtlas.findRegion("main_ship");
+        this.textureRegion = Regions.split(MainAtlas.getAtlas().findRegion("main_ship"), 1, 2, 2)[0];
         setPos(new Vector2(BaseScreen.V_WIDTH / 2, 200));
 
         setHeight(textureRegion.getRegionHeight());
@@ -25,13 +24,14 @@ public class Player extends GameObject {
     }
 
     public void shot() {
-        Bullet bullet = bulletPool.obtain();
+        Bullet bullet = BulletPool.getBulletPool().obtain();
+
         bullet.set(
                 this,
-                GameScreen.textureAtlas.findRegion("bulletMainShip"),
+                MainAtlas.getAtlas().findRegion("bulletMainShip"),
                 getPos(),
                 new Vector2(0f, 500f),
-                0,
+                1f,
                 null,
                 20);
 
@@ -40,7 +40,32 @@ public class Player extends GameObject {
 
     @Override
     public void dispose() {
-        super.dispose();
         shotSound.dispose();
+    }
+
+    // Control
+    public boolean mouseMoved(Vector2 coord2d) {
+        coord2d.y = 200;
+        setPos(coord2d);
+        return false;
+    }
+
+    public boolean touchDown(Vector2 coord2d, int pointer, int button) {
+        if(button == 0) {
+            shot();
+        }
+        return false;
+    }
+
+    public boolean touchUp(Vector2 coord2d, int pointer, int button) {
+        return false;
+    }
+
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    public boolean keyUp(int keycode) {
+        return false;
     }
 }

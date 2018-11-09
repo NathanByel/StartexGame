@@ -5,24 +5,28 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.HealthBar;
-import com.nbdev.startexgame.Pools.EnemyPool;
-import com.nbdev.startexgame.Screens.GameScreen.GameScreen;
+import com.nbdev.startexgame.utils.Regions;
 
 public class Enemy extends GameObject {
     private HealthBar healthBar;
-    private EnemyPool enemyPool;
     private Vector2 v = new Vector2();
-    private static Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
-    private static Sound destroyedSound = Gdx.audio.newSound(Gdx.files.internal("sound/destroyed.mp3"));
+    private static Sound damageSound;
+    private static Sound destroyedSound;
 
     public Enemy() {
         super(100);
-        canGetDamage = true;
+        if(damageSound == null) {
+            damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
+        }
 
-        this.enemyPool = enemyPool;
-        this.textureRegion = GameScreen.textureAtlas.findRegion("enemy0");
+        if(destroyedSound == null) {
+            destroyedSound = Gdx.audio.newSound(Gdx.files.internal("sound/destroyed.mp3"));
+        }
+
+        canGetDamage = true;
+        this.textureRegion = Regions.split( MainAtlas.getAtlas().findRegion("enemy0"), 1, 2, 2)[0];
         healthBar = new HealthBar((int)(textureRegion.getRegionWidth() * 0.8f), 5, Color.GREEN, Color.BLACK);
         healthBar.setRange(0f, 100f);
         healthBar.setValue(health);
@@ -75,5 +79,11 @@ public class Enemy extends GameObject {
             health = dh;
             damageSound.play();
         }
+    }
+
+    @Override
+    public void dispose() {
+        damageSound.dispose();
+        destroyedSound.dispose();
     }
 }

@@ -1,17 +1,12 @@
-package com.nbdev.startexgame;
+package com.nbdev.startexgame.utils;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import com.nbdev.startexgame.Rect;
-
-public class Sprite extends Rect {
+public class Sprite extends com.nbdev.startexgame.utils.Rect {
     private float angle;
     private float scale = 1f;
     protected TextureRegion textureRegion;
-
-    public Sprite() {
-    }
 
     public void draw(SpriteBatch batch) {
         batch.draw(

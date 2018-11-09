@@ -4,9 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.BaseScreen;
+import com.nbdev.startexgame.GameObjects.Bullet;
 import com.nbdev.startexgame.GameObjects.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
 import com.nbdev.startexgame.Pools.BulletPool;
@@ -17,22 +18,15 @@ public class GameScreen extends BaseScreen {
     private Texture background;
 
     private Player player;
-    private Vector2 direction;
-    private BulletPool bulletPool;
     private EnemyPool enemyPool;
     private long oldTime;
 
-
-    public static TextureAtlas textureAtlas = new TextureAtlas("mainAtlas.tpack");
-
     public GameScreen(final Game game) {
         this.game = game;
-        direction = new Vector2(0,0);
         background = new Texture("background.jpg");
 
         enemyPool = new EnemyPool();
-        bulletPool = new BulletPool(enemyPool);
-        player = new Player(bulletPool);
+        player = new Player();
     }
 
     @Override
@@ -43,8 +37,17 @@ public class GameScreen extends BaseScreen {
 
     private void update(float delta) {
         player.update(delta);
-        bulletPool.update(delta);
+        BulletPool.getBulletPool().update(delta);
         enemyPool.update(delta);
+
+        for (Enemy enemy : enemyPool.getActive()) {
+            for (Bullet bullet : BulletPool.getBulletPool().getActive()) {
+                if (!bullet.isOutside(enemy)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.alive = false;
+                }
+            }
+        }
 
         long time = System.currentTimeMillis();
         if(time - oldTime > 3000) {
@@ -66,7 +69,8 @@ public class GameScreen extends BaseScreen {
 
         batch.draw(background, 0, 0);
         player.draw(batch);
-        bulletPool.draw(batch);
+
+        BulletPool.getBulletPool().draw(batch);
         enemyPool.draw(batch);
 
         batch.end();
@@ -75,22 +79,45 @@ public class GameScreen extends BaseScreen {
     @Override
     public void dispose() {
         background.dispose();
+        MainAtlas.getAtlas().dispose();
+        BulletPool.getBulletPool().dispose();
+        enemyPool.dispose();
     }
 
     // Control
     @Override
     public boolean mouseMoved(Vector2 coord2d) {
-        coord2d.y = 200;
-        player.setPos(coord2d);
+        player.mouseMoved(coord2d);
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(Vector2 coord2d, int pointer) {
+        player.mouseMoved(coord2d);
         return false;
     }
 
     @Override
     public boolean touchDown(Vector2 coord2d, int pointer, int button) {
-        System.out.println(button);
-        if(button == 0) {
-            player.shot();
-        }
+        player.touchDown(coord2d, pointer, button);
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(Vector2 coord2d, int pointer, int button) {
+        player.touchUp(coord2d, pointer, button);
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        player.keyDown(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        player.keyUp(keycode);
         return false;
     }
 }

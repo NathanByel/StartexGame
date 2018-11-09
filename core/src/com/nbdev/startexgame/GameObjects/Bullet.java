@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.Rect;
+import com.nbdev.startexgame.utils.Rect;
 
 public class Bullet extends GameObject implements Pool.Poolable {
     private Rect worldBounds;
@@ -68,5 +68,23 @@ public class Bullet extends GameObject implements Pool.Poolable {
     public void reset() {
         pos.set(0,0);
         alive = false;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Bullet{" +
+                "worldBounds=" + worldBounds +
+                ", v=" + v +
+                ", damage=" + damage +
+                ", owner=" + owner +
+                ", health=" + health +
+                ", alive=" + alive +
+                ", canGetDamage=" + canGetDamage +
+                ", textureRegion=" + textureRegion +
+                ", pos=" + pos +
+                ", halfWidth=" + halfWidth +
+                ", halfHeight=" + halfHeight +
+                '}';
     }
 }

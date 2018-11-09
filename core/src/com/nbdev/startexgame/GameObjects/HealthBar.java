@@ -1,4 +1,4 @@
-package com.nbdev.startexgame;
+package com.nbdev.startexgame.GameObjects;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;

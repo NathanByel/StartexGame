@@ -19,9 +19,9 @@ enemy2
   index: -1
 enemy0
   rotate: false
-  xy: 1874, 675
-  size: 166, 309
-  orig: 166, 309
+  xy: 1708, 675
+  size: 332, 309
+  orig: 332, 309
   offset: 0, 0
   index: -1
 enemy1
@@ -34,8 +34,8 @@ enemy1
 main_ship
   rotate: false
   xy: 916, 95
-  size: 195, 287
-  orig: 195, 287
+  size: 390, 287
+  orig: 390, 287
   offset: 0, 0
   index: -1
 message_game_over

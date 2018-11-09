@@ -1,4 +1,4 @@
-package com.nbdev.startexgame;
+package com.nbdev.startexgame.Buttons;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.Screens.GameScreen.GameScreen;
-import com.nbdev.startexgame.Screens.MainMenu.Buttons.ButtonPlay;
-import com.nbdev.startexgame.Screens.MainMenu.Buttons.ButtonQuit;
+import com.nbdev.startexgame.Buttons.ButtonPlay;
+import com.nbdev.startexgame.Buttons.ButtonQuit;
 
 public class MenuScreen extends BaseScreen {
     private final Game game;
