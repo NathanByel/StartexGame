@@ -1,10 +1,11 @@
-package com.nbdev.startexgame.GameObjects;
+package com.nbdev.startexgame.GameObjects.Weapons;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.BaseScreen;
+import com.nbdev.startexgame.GameObjects.GameObject;
 import com.nbdev.startexgame.utils.Rect;
 
 public class Bullet extends GameObject implements Pool.Poolable {

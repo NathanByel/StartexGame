@@ -25,23 +25,19 @@ public abstract class GameObjectsPool<T extends GameObject> extends Pool<T> {
     }
 
     public void update(float delta) {
-        Iterator<T> iterator = activeObjects.iterator();
-
-        while (iterator.hasNext()) {
-            T object = iterator.next();
+        for (T object : activeObjects) {
             if (object.alive) {
                 object.update(delta);
             } else {
-                super.free(object);
-                iterator.remove();
+                free(object);
             }
         }
     }
 
     public void draw(SpriteBatch batch) {
-        for (GameObject activeEnemy : activeObjects) {
-            if(activeEnemy.alive) {
-                activeEnemy.draw(batch);
+        for (GameObject activeObject : activeObjects) {
+            if(activeObject.alive) {
+                activeObject.draw(batch);
             }
         }
     }

@@ -7,26 +7,28 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.GameObjects.Bullet;
-import com.nbdev.startexgame.GameObjects.Enemy;
+import Bullet;
+import com.nbdev.startexgame.GameObjects.Enemies.EnemyGenerator;
+import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
 import com.nbdev.startexgame.Pools.BulletPool;
 import com.nbdev.startexgame.Pools.EnemyPool;
+import com.nbdev.startexgame.Pools.ExplosionPool;
 
 public class GameScreen extends BaseScreen {
     private final Game game;
     private Texture background;
 
     private Player player;
-    private EnemyPool enemyPool;
+    private EnemyGenerator enemyGenerator;
     private long oldTime;
 
     public GameScreen(final Game game) {
         this.game = game;
         background = new Texture("background.jpg");
 
-        enemyPool = new EnemyPool();
         player = new Player();
+        enemyGenerator = new EnemyGenerator();
     }
 
     @Override
@@ -37,28 +39,35 @@ public class GameScreen extends BaseScreen {
 
     private void update(float delta) {
         player.update(delta);
-        BulletPool.getBulletPool().update(delta);
-        enemyPool.update(delta);
+        BulletPool.getPool().update(delta);
+        ExplosionPool.getPool().update(delta);
+        EnemyPool.getPool().update(delta);
 
-        for (Enemy enemy : enemyPool.getActive()) {
-            for (Bullet bullet : BulletPool.getBulletPool().getActive()) {
-                if (!bullet.isOutside(enemy)) {
-                    enemy.damage(bullet.getDamage());
-                    bullet.alive = false;
-                }
-            }
-        }
+        collisionCheck();
 
         long time = System.currentTimeMillis();
         if(time - oldTime > 3000) {
             oldTime = time;
-            Enemy enemy = enemyPool.obtain();
+            /*Enemy enemy = EnemyPool.getPool().obtain();
             enemy.set(
                     new Vector2((float)(Math.random() * GameScreen.V_WIDTH), GameScreen.V_HEIGHT),
                     new Vector2(0, -100f),
                     100,
                     5
-            );
+            );*/
+            Enemy enemy = enemyGenerator.getEnemy(EnemyGenerator.Type.BIG_SHIP);
+            enemy.setPos(new Vector2((float)(Math.random() * GameScreen.V_WIDTH), GameScreen.V_HEIGHT));
+        }
+    }
+
+    private void collisionCheck() {
+        for (Enemy enemy : EnemyPool.getPool().getActive()) {
+            for (Bullet bullet : BulletPool.getPool().getActive()) {
+                if (!bullet.isOutside(enemy)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.alive = false;
+                }
+            }
         }
     }
 
@@ -70,8 +79,9 @@ public class GameScreen extends BaseScreen {
         batch.draw(background, 0, 0);
         player.draw(batch);
 
-        BulletPool.getBulletPool().draw(batch);
-        enemyPool.draw(batch);
+        BulletPool.getPool().draw(batch);
+        ExplosionPool.getPool().draw(batch);
+        EnemyPool.getPool().draw(batch);
 
         batch.end();
     }
@@ -80,8 +90,9 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         background.dispose();
         MainAtlas.getAtlas().dispose();
-        BulletPool.getBulletPool().dispose();
-        enemyPool.dispose();
+        BulletPool.getPool().dispose();
+        ExplosionPool.getPool().dispose();
+        EnemyPool.getPool().dispose();
     }
 
     // Control

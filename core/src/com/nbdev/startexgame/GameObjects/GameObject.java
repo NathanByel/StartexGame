@@ -8,6 +8,7 @@ public abstract class GameObject extends Sprite implements Disposable {
     protected int health;
     public boolean alive;
     protected boolean canGetDamage;
+    protected Vector2 v = new Vector2();
 
     public GameObject() {
         this(new Vector2(0f, 0f));

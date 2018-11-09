@@ -1,6 +1,6 @@
 package com.nbdev.startexgame.Pools;
 
-import com.nbdev.startexgame.GameObjects.Bullet;
+import Bullet;
 
 public class BulletPool extends GameObjectsPool<Bullet> {
     private static BulletPool bulletPool;
@@ -8,7 +8,7 @@ public class BulletPool extends GameObjectsPool<Bullet> {
     private BulletPool() {
     }
 
-    public static BulletPool getBulletPool() {
+    public static BulletPool getPool() {
         if(bulletPool == null) {
             bulletPool = new BulletPool();
         }

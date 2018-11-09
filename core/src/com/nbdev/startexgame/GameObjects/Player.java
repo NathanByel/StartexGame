@@ -10,6 +10,7 @@ import com.nbdev.startexgame.utils.Regions;
 
 public class Player extends GameObject {
     private Sound shotSound;
+    private Bullet bullet;
 
     public Player() {
         super(100);
@@ -24,7 +25,7 @@ public class Player extends GameObject {
     }
 
     public void shot() {
-        Bullet bullet = BulletPool.getBulletPool().obtain();
+        Bullet bullet = BulletPool.getPool().obtain();
 
         bullet.set(
                 this,

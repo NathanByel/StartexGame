@@ -1,4 +1,4 @@
-package com.nbdev.startexgame.GameObjects;
+package com.nbdev.startexgame.GameObjects.Enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -7,15 +7,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.BaseScreen;
+import com.nbdev.startexgame.GameObjects.GameObject;
+import com.nbdev.startexgame.GameObjects.HealthBar;
 import com.nbdev.startexgame.utils.Regions;
 
-public class Enemy extends GameObject {
+public class SmallShip extends GameObject {
     private HealthBar healthBar;
-    private Vector2 v = new Vector2();
     private static Sound damageSound;
     private static Sound destroyedSound;
 
-    public Enemy() {
+    public SmallShip() {
         super(100);
         if(damageSound == null) {
             damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
@@ -53,6 +54,9 @@ public class Enemy extends GameObject {
     @Override
     public void update(float delta) {
         super.update(delta);
+        healthBar.setPosition(pos.x - healthBar.getWidth()/2, pos.y + getHalfHeight() + 15);
+        healthBar.setValue(health);
+        healthBar.act(delta);
         this.pos.mulAdd(v, delta);
 
         if (pos.y < 0) {
@@ -63,9 +67,6 @@ public class Enemy extends GameObject {
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
-        healthBar.setPosition(pos.x - healthBar.getWidth()/2, pos.y + getHalfHeight() + 15);
-        healthBar.setValue(health);
-        healthBar.act(Gdx.graphics.getDeltaTime());
         healthBar.draw(batch, 1f);
     }
 
