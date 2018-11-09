@@ -7,28 +7,35 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.BaseScreen;
-import Bullet;
-import com.nbdev.startexgame.GameObjects.Enemies.EnemyGenerator;
+import com.nbdev.startexgame.GameObjects.Enemies.EnemyEmitter;
+import com.nbdev.startexgame.GameObjects.Enemies.EnemyFactory;
 import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
+import com.nbdev.startexgame.GameObjects.Weapons.Bullet;
 import com.nbdev.startexgame.Pools.BulletPool;
 import com.nbdev.startexgame.Pools.EnemyPool;
 import com.nbdev.startexgame.Pools.ExplosionPool;
+import com.nbdev.startexgame.ScoreBar;
 
 public class GameScreen extends BaseScreen {
     private final Game game;
     private Texture background;
 
+    private ScoreBar scoreBar;
     private Player player;
-    private EnemyGenerator enemyGenerator;
-    private long oldTime;
+    private EnemyFactory enemyFactory;
+    private EnemyEmitter enemyEmitter;
+
+    private int score;
 
     public GameScreen(final Game game) {
         this.game = game;
         background = new Texture("background.jpg");
 
+        scoreBar = new ScoreBar();
         player = new Player();
-        enemyGenerator = new EnemyGenerator();
+        enemyFactory = new EnemyFactory();
+        enemyEmitter = new EnemyEmitter(enemyFactory);
     }
 
     @Override
@@ -42,29 +49,23 @@ public class GameScreen extends BaseScreen {
         BulletPool.getPool().update(delta);
         ExplosionPool.getPool().update(delta);
         EnemyPool.getPool().update(delta);
+        enemyEmitter.generate(delta);
 
         collisionCheck();
-
-        long time = System.currentTimeMillis();
-        if(time - oldTime > 3000) {
-            oldTime = time;
-            /*Enemy enemy = EnemyPool.getPool().obtain();
-            enemy.set(
-                    new Vector2((float)(Math.random() * GameScreen.V_WIDTH), GameScreen.V_HEIGHT),
-                    new Vector2(0, -100f),
-                    100,
-                    5
-            );*/
-            Enemy enemy = enemyGenerator.getEnemy(EnemyGenerator.Type.BIG_SHIP);
-            enemy.setPos(new Vector2((float)(Math.random() * GameScreen.V_WIDTH), GameScreen.V_HEIGHT));
-        }
+        scoreBar.setHealth(player.getHealth());
+        scoreBar.setScore(score);
     }
 
     private void collisionCheck() {
         for (Enemy enemy : EnemyPool.getPool().getActive()) {
             for (Bullet bullet : BulletPool.getPool().getActive()) {
-                if (!bullet.isOutside(enemy)) {
-                    enemy.damage(bullet.getDamage());
+                if(!bullet.isOutside(player) && bullet.getOwner() != player) {
+                    player.damage(bullet.getDamage());
+                    bullet.alive = false;
+                } else if (!bullet.isOutside(enemy) && bullet.getOwner() == player) {
+                    if(enemy.damage(bullet.getDamage())) {
+                        score++;
+                    }
                     bullet.alive = false;
                 }
             }
@@ -83,6 +84,7 @@ public class GameScreen extends BaseScreen {
         ExplosionPool.getPool().draw(batch);
         EnemyPool.getPool().draw(batch);
 
+        scoreBar.draw(batch);
         batch.end();
     }
 

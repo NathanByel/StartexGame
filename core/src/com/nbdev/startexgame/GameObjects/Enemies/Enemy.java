@@ -6,19 +6,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.nbdev.startexgame.Atlas.MainAtlas;
+import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.GameObjects.Bullet;
 import com.nbdev.startexgame.GameObjects.Explosion;
 import com.nbdev.startexgame.GameObjects.GameObject;
 import com.nbdev.startexgame.GameObjects.HealthBar;
+import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.Pools.ExplosionPool;
 
-public class Enemy extends GameObject {
+public class Enemy extends GameObject  implements Pool.Poolable {
+    private static final Vector2 fastSpeed = new Vector2(0, -200f);
+
     private HealthBar healthBar;
+    private boolean visible;
     private static Sound damageSound;
     private static Sound destroyedSound;
-    private Bullet bullet;
+    private Weapon weapon;
 
     public Enemy() {
         super(100);
@@ -31,23 +34,14 @@ public class Enemy extends GameObject {
         }
 
         canGetDamage = true;
-        //this.textureRegion = Regions.split( MainAtlas.getAtlas().findRegion("enemy0"), 1, 2, 2)[0];
-        //healthBar = new HealthBar((int)(textureRegion.getRegionWidth() * 0.8f), 5, Color.GREEN, Color.BLACK);
-        healthBar = new HealthBar(0, 5, Color.GREEN, Color.BLACK);
+        healthBar = new HealthBar(100, 10, Color.GREEN, Color.BLACK);
 
         healthBar.setRange(0f, 100f);
         healthBar.setValue(health);
 
-        setPos(new Vector2(BaseScreen.V_WIDTH / 2, 800));
-        healtBarSetPos();
+        setPos(new Vector2(BaseScreen.V_WIDTH / 2, BaseScreen.V_HEIGHT));
 
-        //setHeight(textureRegion.getRegionHeight());
-        //setHeightProportion(textureRegion.getRegionHeight());
-        //setWidth(textureRegion.getRegionWidth());
-    }
-
-    private void healtBarSetPos() {
-        healthBar.setPosition(pos.x - healthBar.getWidth()/2, pos.y + getHalfHeight() + 15);
+        weapon = new Weapon(this);
     }
 
     public void set(
@@ -55,40 +49,49 @@ public class Enemy extends GameObject {
             Vector2 v0,
             float height,
             int health,
-            Bullet bullet
+            Weapon.Type weaponType
     ) {
+        this.weapon.set(weaponType, true);
         this.textureRegion = region;
-        //this.pos.set(pos0);
-        //healtBarSetPos();
+
         this.v.set(v0);
-        this.v.y *= 10000;
+        this.v.y *= 1000; // костыль
         this.health = health;
 
         setHeight(textureRegion.getRegionHeight());
         setWidth(textureRegion.getRegionWidth());
-        healthBar.setWidth((int)(textureRegion.getRegionWidth() * 0.8f));
 
-        this.bullet = bullet;
+        healthBar.setWidth((int)(textureRegion.getRegionWidth() * 0.8f));
+        healthBar.setRange(0f, health);
+        //healthBar.setValue(health);
+
+        visible = false;
         alive = true;
     }
 
-private float timer;
     @Override
     public void update(float delta) {
         super.update(delta);
-        healtBarSetPos();
+
+        healthBar.setPosition(pos.x - healthBar.getWidth()/2, pos.y + getHalfHeight() + 10);
         healthBar.setValue(health);
         healthBar.act(delta);
-        this.pos.mulAdd(v, delta);
 
-        timer += delta;
-        if(timer > 3000) {
-            timer = 0;
+        weapon.update(delta);
+
+        if(visible) {
             shot();
+            this.pos.mulAdd(v, delta);
+        } else {
+            this.pos.mulAdd(fastSpeed, delta);
+            if(pos.y + getHeight() < BaseScreen.V_HEIGHT) {
+                visible = true;
+            }
         }
 
-
-        if (pos.y < 0) {
+        if (getTop() < 0) {
+            healthBar.setValue(0f);
+            health = 0;
             alive = false;
         }
     }
@@ -96,33 +99,29 @@ private float timer;
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
-        healthBar.draw(batch, 1f);
-    }
-
-    public void damage(int damage) {
-        int dh = health - damage;
-        if(dh <= 0) {
-            destroy();
-        } else {
-            health = dh;
-            damageSound.play();
+        if(healthBar.getValue() > 0) {
+            healthBar.draw(batch, 1f);
         }
     }
 
-    public void shot() {
-        bullet.set(
-                this,
-                MainAtlas.getAtlas().findRegion("bulletEnemy"),
-                getPos(),
-                new Vector2(0f, -500f),
-                1f,
-                null,
-                20);
+    public boolean damage(int damage) {
+        int dh = health - damage;
+        if(dh <= 0) {
+            destroy();
+            return true;
+        } else {
+            health = dh;
+            damageSound.play();
+            return false;
+        }
+    }
 
-        //shotSound.play();
+    public boolean shot() {
+        return weapon.shot(pos);
     }
 
     public void destroy() {
+        healthBar.setValue(0f);
         health = 0;
         alive = false;
         Explosion explosion = ExplosionPool.getPool().obtain();
@@ -134,5 +133,11 @@ private float timer;
     public void dispose() {
         damageSound.dispose();
         destroyedSound.dispose();
+    }
+
+    @Override
+    public void reset() {
+        pos.set(BaseScreen.V_WIDTH / 2, BaseScreen.V_HEIGHT);
+        alive = false;
     }
 }

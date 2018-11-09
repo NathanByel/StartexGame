@@ -30,6 +30,10 @@ public class Explosion extends GameObject implements Pool.Poolable {
     @Override
     public void update(float delta) {
         textureRegion = explodeAnimation.getKeyFrame(stateTime);
+        if(explodeAnimation.isAnimationFinished(stateTime)) {
+            alive = false;
+            System.out.println("explosion finished");
+        }
         stateTime += delta;
     }
 

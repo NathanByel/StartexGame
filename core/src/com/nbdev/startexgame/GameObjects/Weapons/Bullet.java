@@ -44,7 +44,7 @@ public class Bullet extends GameObject implements Pool.Poolable {
     public void update(float delta) {
         this.pos.mulAdd(v, delta);
 
-        if (pos.y > BaseScreen.V_HEIGHT) {
+        if (pos.y >= BaseScreen.V_HEIGHT) {
             alive = false;
         }
     }
@@ -69,23 +69,5 @@ public class Bullet extends GameObject implements Pool.Poolable {
     public void reset() {
         pos.set(0,0);
         alive = false;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Bullet{" +
-                "worldBounds=" + worldBounds +
-                ", v=" + v +
-                ", damage=" + damage +
-                ", owner=" + owner +
-                ", health=" + health +
-                ", alive=" + alive +
-                ", canGetDamage=" + canGetDamage +
-                ", textureRegion=" + textureRegion +
-                ", pos=" + pos +
-                ", halfWidth=" + halfWidth +
-                ", halfHeight=" + halfHeight +
-                '}';
     }
 }

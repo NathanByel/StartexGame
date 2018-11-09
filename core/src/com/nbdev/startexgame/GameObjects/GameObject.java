@@ -36,4 +36,8 @@ public abstract class GameObject extends Sprite implements Disposable {
     public void dispose() {
 
     }
+
+    public int getHealth() {
+        return health;
+    }
 }

@@ -5,8 +5,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.GameObjects.GameObject;
 
-import java.util.Iterator;
-
 public abstract class GameObjectsPool<T extends GameObject> extends Pool<T> {
     private final Array<T> activeObjects = new Array<T>();
 

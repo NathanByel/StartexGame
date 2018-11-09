@@ -4,10 +4,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Atlas.MainAtlas;
 
+import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.Pools.EnemyPool;
 import com.nbdev.startexgame.utils.Regions;
 
-public class EnemyGenerator {
+public class EnemyFactory {
     public enum Type {
         SMALL_SHIP,
         MEDIUM_SHIP,
@@ -41,7 +42,7 @@ public class EnemyGenerator {
                         enemySmallV,
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP,
-                        bullet
+                        Weapon.Type.SMALL_WEAPON
                 );
                 break;
 
@@ -51,7 +52,7 @@ public class EnemyGenerator {
                         enemyMediumV,
                         ENEMY_MEDIUM_HEIGHT,
                         ENEMY_MEDIUM_HP,
-                        bullet
+                        Weapon.Type.MEDIUM_WEAPON
                 );
                 break;
 
@@ -61,7 +62,7 @@ public class EnemyGenerator {
                         enemyBigV,
                         ENEMY_BIG_HEIGHT,
                         ENEMY_BIG_HP,
-                        bullet
+                        Weapon.Type.BIG_WEAPON
                 );
                 break;
         }

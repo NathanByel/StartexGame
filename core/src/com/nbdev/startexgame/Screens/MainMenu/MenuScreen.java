@@ -69,11 +69,4 @@ public class MenuScreen extends BaseScreen {
         buttonQuit.touchUp(coord2d, pointer, button);
         return false;
     }
-
-    @Override
-    public boolean mouseMoved(Vector2 coord2d) {
-        buttonPlay.mouseMoved(coord2d);
-        buttonQuit.mouseMoved(coord2d);
-        return false;
-    }
 }
