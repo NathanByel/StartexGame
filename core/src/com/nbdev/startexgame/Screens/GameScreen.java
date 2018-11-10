@@ -44,6 +44,7 @@ public class GameScreen extends BaseScreen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sound/music.mp3"));
         music.setVolume(0.5f);
+        music.setLooping(true);
         music.play();
     }
 
