@@ -19,16 +19,11 @@ public class Enemy extends GameObject  implements Pool.Poolable {
 
     private HealthBar healthBar;
     private boolean visible;
-    private static Sound damageSound;
     private static Sound destroyedSound;
     private Weapon weapon;
 
     public Enemy() {
         super(100);
-        if(damageSound == null) {
-            damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
-        }
-
         if(destroyedSound == null) {
             destroyedSound = Gdx.audio.newSound(Gdx.files.internal("sound/destroyed.mp3"));
         }
@@ -111,7 +106,6 @@ public class Enemy extends GameObject  implements Pool.Poolable {
             return true;
         } else {
             health = dh;
-            damageSound.play();
             return false;
         }
     }
@@ -125,13 +119,14 @@ public class Enemy extends GameObject  implements Pool.Poolable {
         health = 0;
         alive = false;
         Explosion explosion = ExplosionPool.getPool().obtain();
+        explosion.setHeightProportion(getHeight());
         explosion.setPos(pos);
         destroyedSound.play();
     }
 
     @Override
     public void dispose() {
-        damageSound.dispose();
+        weapon.dispose();
         destroyedSound.dispose();
     }
 

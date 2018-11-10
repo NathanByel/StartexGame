@@ -1,14 +1,18 @@
 package com.nbdev.startexgame.GameObjects.Weapons;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.GameObject;
 import com.nbdev.startexgame.utils.Rect;
 
-public class Bullet extends GameObject implements Pool.Poolable {
+public class Bullet extends GameObject implements Pool.Poolable, Disposable {
+    private static Sound damageSound;
     private Rect worldBounds;
     private Vector2 v = new Vector2();
     private int damage;
@@ -17,6 +21,9 @@ public class Bullet extends GameObject implements Pool.Poolable {
     public Bullet() {
         super(0);
         canGetDamage = false;
+        if(damageSound == null) {
+            damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
+        }
     }
 
     public void set(
@@ -32,9 +39,7 @@ public class Bullet extends GameObject implements Pool.Poolable {
         this.textureRegion = region;
         this.pos.set(pos0);
         this.v.set(v0);
-        setHeight(textureRegion.getRegionHeight());
-        setWidth(textureRegion.getRegionWidth());
-        //setHeightProportion(height);
+        setHeightProportion(height * textureRegion.getRegionHeight() * 100); // костыль
         this.worldBounds = worldBounds;
         this.damage = damage;
         alive = true;
@@ -50,6 +55,7 @@ public class Bullet extends GameObject implements Pool.Poolable {
     }
 
     public int getDamage() {
+        damageSound.play();
         return damage;
     }
 
@@ -69,5 +75,10 @@ public class Bullet extends GameObject implements Pool.Poolable {
     public void reset() {
         pos.set(0,0);
         alive = false;
+    }
+
+    @Override
+    public void dispose() {
+        damageSound.dispose();
     }
 }

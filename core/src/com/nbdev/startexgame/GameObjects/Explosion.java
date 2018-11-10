@@ -41,4 +41,8 @@ public class Explosion extends GameObject implements Pool.Poolable {
     public void reset() {
         stateTime = 0;
     }
+
+    @Override
+    public void dispose() {
+    }
 }

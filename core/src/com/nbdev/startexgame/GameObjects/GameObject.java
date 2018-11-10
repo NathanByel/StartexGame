@@ -32,11 +32,6 @@ public abstract class GameObject extends Sprite implements Disposable {
         return pos;
     }
 
-    @Override
-    public void dispose() {
-
-    }
-
     public int getHealth() {
         return health;
     }

@@ -46,6 +46,9 @@ public abstract class GameObjectsPool<T extends GameObject> extends Pool<T> {
 
     public void dispose() {
         freeAll(activeObjects);
+        for (T activeObject : activeObjects) {
+            activeObject.dispose();
+        }
         clear();
     }
 }

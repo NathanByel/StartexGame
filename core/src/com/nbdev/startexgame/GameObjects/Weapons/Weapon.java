@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.nbdev.startexgame.Atlas.MainAtlas;
 import com.nbdev.startexgame.Pools.BulletPool;
 
-public class Weapon {
+public class Weapon implements Disposable {
     public enum Type {
         SMALL_WEAPON,
         MEDIUM_WEAPON,
@@ -74,7 +75,7 @@ public class Weapon {
         } else {
             textureRegion = MainAtlas.getAtlas().findRegion("bulletMainShip");
             bulletV.y *= -1;
-            reloadInterval = 0;
+            reloadInterval = 0.2f;
         }
 
         bulletV.y *= 2000; // костыль
@@ -103,5 +104,10 @@ public class Weapon {
         if(reloadTimer > 0) {
             reloadTimer -= delta;
         }
+    }
+
+    @Override
+    public void dispose() {
+        shotSound.dispose();
     }
 }

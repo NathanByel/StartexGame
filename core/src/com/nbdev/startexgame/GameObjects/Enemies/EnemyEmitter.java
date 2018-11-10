@@ -1,7 +1,7 @@
 package com.nbdev.startexgame.GameObjects.Enemies;
 
 import com.badlogic.gdx.math.Vector2;
-import com.nbdev.startexgame.Screens.GameScreen.GameScreen;
+import com.nbdev.startexgame.Screens.GameScreen;
 
 public class EnemyEmitter {
     private static final float GENERATE_INTERVAL = 3f;

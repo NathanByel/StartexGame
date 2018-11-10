@@ -8,6 +8,7 @@ import com.nbdev.startexgame.utils.Regions;
 
 public class Player extends GameObject {
     private Weapon weapon;
+    private boolean autoShot;
 
     public Player() {
         super(100);
@@ -27,21 +28,26 @@ public class Player extends GameObject {
     public void update(float delta) {
         super.update(delta);
         weapon.update(delta);
+
+        if(autoShot) {
+            shot();
+        }
     }
 
     public boolean shot() {
         return weapon.shot(pos);
     }
 
-    public void damage(int damage) {
+    public boolean damage(int damage) {
         int dh = health - damage;
         if(dh <= 0) {
             health = 0;
             //destroy();
+            return true;
         } else {
             health = dh;
-            //damageSound.play();
             System.out.println("player damage");
+            return false;
         }
     }
 
@@ -55,19 +61,18 @@ public class Player extends GameObject {
     public boolean touchDown(Vector2 coord2d, int pointer, int button) {
         if(button == 0) {
             shot();
+            autoShot = true;
         }
         return false;
     }
 
     public boolean touchUp(Vector2 coord2d, int pointer, int button) {
+        autoShot = false;
         return false;
     }
 
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    public boolean keyUp(int keycode) {
-        return false;
+    @Override
+    public void dispose() {
+        weapon.dispose();
     }
 }
