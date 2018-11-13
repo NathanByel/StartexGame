@@ -1,7 +1,7 @@
 package com.nbdev.startexgame.GameObjects;
 
 import com.badlogic.gdx.math.Vector2;
-import com.nbdev.startexgame.Atlas.MainAtlas;
+import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.utils.Regions;
@@ -14,7 +14,12 @@ public class Player extends GameObject {
         super(100);
         canGetDamage = true;
 
-        this.textureRegion = Regions.split(MainAtlas.getAtlas().findRegion("main_ship"), 1, 2, 2)[0];
+        this.textureRegion = Regions.split(
+                GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("main_ship"),
+                1,
+                2,
+                2)[0];
+
         setPos(new Vector2(BaseScreen.V_WIDTH / 2, 200));
 
         setHeight(textureRegion.getRegionHeight());

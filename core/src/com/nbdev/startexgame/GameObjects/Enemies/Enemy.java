@@ -1,12 +1,11 @@
 package com.nbdev.startexgame.GameObjects.Enemies;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
+import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Explosion;
 import com.nbdev.startexgame.GameObjects.GameObject;
@@ -19,14 +18,10 @@ public class Enemy extends GameObject  implements Pool.Poolable {
 
     private HealthBar healthBar;
     private boolean visible;
-    private static Sound destroyedSound;
     private Weapon weapon;
 
     public Enemy() {
         super(100);
-        if(destroyedSound == null) {
-            destroyedSound = Gdx.audio.newSound(Gdx.files.internal("sound/destroyed.mp3"));
-        }
 
         canGetDamage = true;
         healthBar = new HealthBar(100, 10, Color.GREEN, Color.BLACK);
@@ -121,18 +116,17 @@ public class Enemy extends GameObject  implements Pool.Poolable {
         Explosion explosion = ExplosionPool.getPool().obtain();
         explosion.setHeightProportion(getHeight());
         explosion.setPos(pos);
-        destroyedSound.play();
+        GameAssets.getInstance().get(GameAssets.destroyedSound);
     }
 
     @Override
     public void dispose() {
         weapon.dispose();
-        destroyedSound.dispose();
     }
 
     @Override
     public void reset() {
-        pos.set(BaseScreen.V_WIDTH / 2, BaseScreen.V_HEIGHT);
         alive = false;
+        pos.set(BaseScreen.V_WIDTH / 2, BaseScreen.V_HEIGHT);
     }
 }

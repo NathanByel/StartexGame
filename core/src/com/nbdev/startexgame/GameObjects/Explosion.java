@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
-import com.nbdev.startexgame.Atlas.MainAtlas;
+import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.utils.Regions;
 
 public class Explosion extends GameObject implements Pool.Poolable {
@@ -14,7 +14,8 @@ public class Explosion extends GameObject implements Pool.Poolable {
     public Explosion() {
         explodeAnimation = new Animation<TextureRegion>(
                 0.01f,
-                Regions.split( MainAtlas.getAtlas().findRegion("explosion"), 9, 9, 81)
+                Regions.split( GameAssets.getInstance().get(GameAssets.textureAtlas).
+                                findRegion("explosion"), 9, 9, 81)
         );
         stateTime = 0;
         textureRegion = explodeAnimation.getKeyFrame(stateTime);

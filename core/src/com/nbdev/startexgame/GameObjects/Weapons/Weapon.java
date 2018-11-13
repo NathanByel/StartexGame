@@ -1,11 +1,9 @@
 package com.nbdev.startexgame.GameObjects.Weapons;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.nbdev.startexgame.Atlas.MainAtlas;
+import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.Pools.BulletPool;
 
 public class Weapon implements Disposable {
@@ -39,11 +37,8 @@ public class Weapon implements Disposable {
     private float reloadTimer;
     private TextureRegion textureRegion;
 
-    private static Sound shotSound;
-
     public Weapon(Object owner) {
         this.owner = owner;
-        shotSound = Gdx.audio.newSound(Gdx.files.internal("sound/shot.mp3"));
     }
 
     public void set(Type type, boolean enemy) {
@@ -71,9 +66,11 @@ public class Weapon implements Disposable {
         }
 
         if (enemy) {
-            textureRegion = MainAtlas.getAtlas().findRegion("bulletEnemy");
+            //textureRegion = MainAtlas.getAtlas().findRegion("bulletEnemy");
+            textureRegion =  GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("bulletEnemy");
         } else {
-            textureRegion = MainAtlas.getAtlas().findRegion("bulletMainShip");
+            //textureRegion = MainAtlas.getAtlas().findRegion("bulletMainShip");
+            textureRegion = GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("bulletMainShip");
             bulletV.y *= -1;
             reloadInterval = 0.2f;
         }
@@ -92,7 +89,7 @@ public class Weapon implements Disposable {
                     null,
                     bulletDamage);
 
-            shotSound.play();
+            GameAssets.getInstance().get(GameAssets.shotSound).play();
 
             reloadTimer = reloadInterval;
             return true;
@@ -108,6 +105,5 @@ public class Weapon implements Disposable {
 
     @Override
     public void dispose() {
-        shotSound.dispose();
     }
 }
