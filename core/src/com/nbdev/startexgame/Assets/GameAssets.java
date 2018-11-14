@@ -15,6 +15,9 @@ public class GameAssets extends AssetManager implements Disposable {
     public static final AssetDescriptor<TextureAtlas> textureAtlas =
             new AssetDescriptor<TextureAtlas>("mainAtlas.tpack", TextureAtlas.class);
 
+    public static final AssetDescriptor<TextureAtlas> shieldAtlas =
+            new AssetDescriptor<TextureAtlas>("shieldAtlas.tpack", TextureAtlas.class);
+
     public static final AssetDescriptor<Texture> background =
             new AssetDescriptor<Texture>("bg2.jpg", Texture.class);
 
@@ -30,6 +33,11 @@ public class GameAssets extends AssetManager implements Disposable {
     public static final AssetDescriptor<Sound> shotSound =
             new AssetDescriptor<Sound> ("sound/shot.mp3", Sound.class);
 
+    public static final AssetDescriptor<Sound> shieldShotSound =
+            new AssetDescriptor<Sound> ("sound/shield_shot.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> shieldSound =
+            new AssetDescriptor<Sound> ("sound/shield.mp3", Sound.class);
 
     public static GameAssets getInstance() {
         if (gameAssets == null) {
@@ -41,8 +49,11 @@ public class GameAssets extends AssetManager implements Disposable {
     public void load()
     {
         load(textureAtlas);
+        load(shieldAtlas);
         load(background);
 
+        load(shieldSound);
+        load(shieldShotSound);
         load(shotSound);
         load(damageSound);
         load(destroyedSound);
@@ -52,6 +63,8 @@ public class GameAssets extends AssetManager implements Disposable {
 
     @Override
     public void dispose() {
+        get(shieldSound).stop();
+        get(shieldShotSound).stop();
         get(shotSound).stop();
         get(damageSound).stop();
         get(destroyedSound).stop();

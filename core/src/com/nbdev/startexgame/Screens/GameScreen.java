@@ -4,14 +4,15 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.Background;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.Buttons.ButtonNewGame;
 import com.nbdev.startexgame.GameObjects.Enemies.EnemyEmitter;
 import com.nbdev.startexgame.GameObjects.Enemies.EnemyFactory;
 import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
+import com.nbdev.startexgame.GameObjects.Shield;
 import com.nbdev.startexgame.GameObjects.Weapons.Bullet;
 import com.nbdev.startexgame.Pools.BulletPool;
 import com.nbdev.startexgame.Pools.EnemyPool;
@@ -28,6 +29,7 @@ public class GameScreen extends BaseScreen {
 
     private int score;
     private boolean gameEnd;
+    private Shield shield;
 
     public GameScreen(final Game game) {
         this.game = game;
@@ -35,6 +37,9 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void show() {
+        super.show();
+        System.out.println("show game");
+
         GameAssets.getInstance().load();
         GameAssets.getInstance().finishLoading(); // Ожидание загрузки ресурсов
 
@@ -42,11 +47,9 @@ public class GameScreen extends BaseScreen {
 
         scoreBar = new ScoreBar();
         player = new Player();
+        shield = new Shield();
         EnemyFactory enemyFactory = new EnemyFactory();
         enemyEmitter = new EnemyEmitter(enemyFactory);
-
-        System.out.println("show game");
-        super.show();
 
         GameAssets.getInstance().get(GameAssets.music).setVolume(0.5f);
         GameAssets.getInstance().get(GameAssets.music).setLooping(true);
@@ -63,6 +66,9 @@ public class GameScreen extends BaseScreen {
         background.update(delta);
 
         if(!gameEnd) {
+            if(shield != null && shield.alive) {
+                shield.update(delta);
+            }
             player.update(delta);
             BulletPool.getPool().update(delta);
             ExplosionPool.getPool().update(delta);
@@ -78,36 +84,37 @@ public class GameScreen extends BaseScreen {
     private void collisionCheck() {
         for (Enemy enemy : EnemyPool.getPool().getActive()) {
             for (Bullet bullet : BulletPool.getPool().getActive()) {
-                if(!bullet.isOutside(player) && bullet.getOwner() != player) {
+                if(player.alive && !bullet.isOutside(player) && bullet.getOwner() != player) {
                     bullet.alive = false;
                     if(player.damage(bullet.getDamage())) {
-
+                        System.out.println("set menu screen");
+                        Timer.schedule(new Timer.Task(){
+                            @Override
+                            public void run() {
+                                gameEnd = true;
+                                System.out.println("timer");
+                                game.setScreen(new GameOverScreen(game));
+                            }
+                        }, 1f);
+                        return;
                     }
                 } else if (!bullet.isOutside(enemy) && bullet.getOwner() == player) {
                     bullet.alive = false;
                     if(enemy.damage(bullet.getDamage())) {
                         score++;
-                        System.out.println("set menu screen");
 
-                        //if(!isEnd) {
-                        //    Timer.schedule(new Timer.Task(){
-                        //        @Override
-                        //        public void run() {
-                                    // Do your work
-                                    System.out.println("timer");
-                                    gameEnd = true;
-                                    game.setScreen(new GameOverScreen(game));
-
-                         //       }
-                          //  }, 0.1f);
-                         //   isEnd = true;
-                        //}
-
-                        System.out.println("return");
-                        return;
+                        if(!shield.alive) {
+                            shield.setHeightProportion(100);
+                            shield.set(null, enemy.getPos(), new Vector2(0, -300f), 8f);
+                        }
                     }
                 }
             }
+        }
+
+        if(shield.alive && (shield.getOwner() != player) && !player.isOutside(shield)) {
+            player.setShield(shield);
+            System.out.println("got shield");
         }
     }
 
@@ -118,6 +125,9 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
 
         if(!gameEnd) {
+            if(shield != null && shield.alive) {
+                shield.draw(batch);
+            }
             player.draw(batch);
             BulletPool.getPool().draw(batch);
             ExplosionPool.getPool().draw(batch);
@@ -130,7 +140,6 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void hide() {
-        //super.hide();
         dispose();
     }
 

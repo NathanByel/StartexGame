@@ -95,6 +95,7 @@ public class Enemy extends GameObject  implements Pool.Poolable {
     }
 
     public boolean damage(int damage) {
+        GameAssets.getInstance().get(GameAssets.damageSound).play();
         int dh = health - damage;
         if(dh <= 0) {
             destroy();

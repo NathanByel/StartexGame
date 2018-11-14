@@ -51,7 +51,6 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
     }
 
     public int getDamage() {
-        GameAssets.getInstance().get(GameAssets.damageSound).play();
         return damage;
     }
 
