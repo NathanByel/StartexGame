@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
+import com.nbdev.startexgame.GameObjects.Weapons.BigWeapon;
+import com.nbdev.startexgame.GameObjects.Weapons.SmallWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.ItemsBar.ItemsBar;
 import com.nbdev.startexgame.Pools.ExplosionPool;
@@ -32,8 +34,7 @@ public class Player extends GameObject {
         setHeight(textureRegion.getRegionHeight());
         setWidth(textureRegion.getRegionWidth());
 
-        weapon = new Weapon(this);
-        weapon.set(Weapon.Type.SMALL_WEAPON, false);
+        weapon = new SmallWeapon(this, false);
     }
 
     @Override
@@ -133,6 +134,5 @@ public class Player extends GameObject {
 
     @Override
     public void dispose() {
-        weapon.dispose();
     }
 }

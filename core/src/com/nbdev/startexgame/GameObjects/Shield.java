@@ -9,7 +9,7 @@ import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.ItemsBar.SlotItem;
 
 public class Shield extends GameObject implements SlotItem {
-    private static float FLASH_SPEED = 0.3f;
+    private static final float FLASH_SPEED = 0.3f;
     private float actionTime;
     private float transparency;
     private float flashSpeed;

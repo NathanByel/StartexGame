@@ -30,8 +30,6 @@ public class Enemy extends GameObject  implements Pool.Poolable {
         healthBar.setValue(health);
 
         setPos(new Vector2(BaseScreen.V_WIDTH / 2, BaseScreen.V_HEIGHT));
-
-        weapon = new Weapon(this);
     }
 
     public void set(
@@ -39,9 +37,9 @@ public class Enemy extends GameObject  implements Pool.Poolable {
             Vector2 v0,
             float height,
             int health,
-            Weapon.Type weaponType
+            Weapon weapon
     ) {
-        this.weapon.set(weaponType, true);
+        this.weapon = weapon;
         this.textureRegion = region;
 
         this.v.set(v0);
@@ -122,7 +120,6 @@ public class Enemy extends GameObject  implements Pool.Poolable {
 
     @Override
     public void dispose() {
-        weapon.dispose();
     }
 
     @Override

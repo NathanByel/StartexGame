@@ -68,10 +68,6 @@ public class ItemsBarSlot extends Sprite {
             case VISIBLE:
                 sprite.setTextureRegion(item.getTextureRegion());
                 bar.setValue(item.getValue());
-                //if(item.getValue() <= 0) {
-                //    state = State.HIDING;
-                //    item = null;
-                //}
                 break;
         }
 
@@ -90,9 +86,8 @@ public class ItemsBarSlot extends Sprite {
             batch.setColor(1f, 1f, 1f, TRANSPARENCY);
             super.draw(batch);
             sprite.draw(batch);
-            batch.setColor(1f, 1f, 1f, 1f);
-
             bar.draw(batch, TRANSPARENCY);
+            batch.setColor(1f, 1f, 1f, 1f);
         }
     }
 

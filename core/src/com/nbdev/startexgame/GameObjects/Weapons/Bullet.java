@@ -1,21 +1,22 @@
 package com.nbdev.startexgame.GameObjects.Weapons;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
-import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.GameObject;
 import com.nbdev.startexgame.utils.Rect;
 
-public class Bullet extends GameObject implements Pool.Poolable, Disposable {
-
-    private Rect worldBounds;
-    private Vector2 v = new Vector2();
-    private int damage;
-    private Object owner;
+public class Bullet extends GameObject implements Pool.Poolable {
+    protected Rect worldBounds;
+    protected Vector2 v = new Vector2();
+    protected int damage;
+    protected Object owner;
+    private Animation<TextureRegion> bulletAnimation;
+    private Animation<TextureRegion> hitAnimation;
 
     public Bullet() {
         super(0);
@@ -24,7 +25,8 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
 
     public void set(
             Object owner,
-            TextureRegion region,
+            Animation<TextureRegion> bulletAnimation,
+            Animation<TextureRegion> hitAnimation,
             Vector2 pos0,
             Vector2 v0,
             float height,
@@ -32,7 +34,9 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
             int damage
     ) {
         this.owner = owner;
-        this.textureRegion = region;
+        this.bulletAnimation = bulletAnimation;
+        textureRegion = bulletAnimation.getKeyFrame(0);
+        this.hitAnimation = hitAnimation;
         this.pos.set(pos0);
         this.v.set(v0);
         setHeightProportion(height * textureRegion.getRegionHeight() * 100); // костыль
@@ -44,6 +48,8 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
     @Override
     public void update(float delta) {
         this.pos.mulAdd(v, delta);
+
+        textureRegion = bulletAnimation.getKeyFrame(0);
 
         if (pos.y >= BaseScreen.V_HEIGHT) {
             alive = false;
@@ -74,6 +80,5 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
 
     @Override
     public void dispose() {
-
     }
 }
