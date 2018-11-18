@@ -13,16 +13,16 @@ public class GameAssets extends AssetManager implements Disposable {
     private static GameAssets gameAssets;
 
     public static final AssetDescriptor<TextureAtlas> textureAtlas =
-            new AssetDescriptor<TextureAtlas>("mainAtlas.tpack", TextureAtlas.class);
+            new AssetDescriptor<TextureAtlas>("images/mainAtlas.tpack", TextureAtlas.class);
 
     public static final AssetDescriptor<TextureAtlas> shieldAtlas =
-            new AssetDescriptor<TextureAtlas>("shieldAtlas.tpack", TextureAtlas.class);
+            new AssetDescriptor<TextureAtlas>("images/shieldAtlas.tpack", TextureAtlas.class);
 
     public static final AssetDescriptor<Texture> itemSlot =
-            new AssetDescriptor<Texture>("item_slot.png", Texture.class);
+            new AssetDescriptor<Texture>("images/item_slot.png", Texture.class);
 
     public static final AssetDescriptor<Texture> background =
-            new AssetDescriptor<Texture>("bg2.jpg", Texture.class);
+            new AssetDescriptor<Texture>("images/bg2.jpg", Texture.class);
 
     public static final AssetDescriptor<Music> music =
             new AssetDescriptor<Music>("sound/music.mp3", Music.class);

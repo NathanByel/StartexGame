@@ -12,7 +12,7 @@ public class MenuAssets extends AssetManager implements Disposable {
     //public AssetManager manager = new AssetManager();
 
     public static final AssetDescriptor<Texture> background =
-            new AssetDescriptor<Texture>("bg2.jpg", Texture.class);
+            new AssetDescriptor<Texture>("images/bg2.jpg", Texture.class);
 
     public static final AssetDescriptor<TextureAtlas> textureAtlas =
             new AssetDescriptor<TextureAtlas>("menu/menu.tpack", TextureAtlas.class);
@@ -25,11 +25,6 @@ public class MenuAssets extends AssetManager implements Disposable {
 
     public void load()
     {
-        //manager.load(background);
-        //manager.load(textureAtlas);
-
-        //manager.load(buttonSound);
-        //manager.load(music);
         load(background);
         load(textureAtlas);
 
@@ -40,10 +35,6 @@ public class MenuAssets extends AssetManager implements Disposable {
 
     @Override
     public void dispose() {
-        //manager.get(buttonSound).stop();
-        //manager.get(music).stop();
-        //manager.dispose();
-
         get(buttonSound).stop();
         get(music).stop();
         super.dispose();
