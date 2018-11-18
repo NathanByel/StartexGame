@@ -18,6 +18,9 @@ public class GameAssets extends AssetManager implements Disposable {
     public static final AssetDescriptor<TextureAtlas> shieldAtlas =
             new AssetDescriptor<TextureAtlas>("shieldAtlas.tpack", TextureAtlas.class);
 
+    public static final AssetDescriptor<Texture> itemSlot =
+            new AssetDescriptor<Texture>("item_slot.png", Texture.class);
+
     public static final AssetDescriptor<Texture> background =
             new AssetDescriptor<Texture>("bg2.jpg", Texture.class);
 
@@ -51,7 +54,8 @@ public class GameAssets extends AssetManager implements Disposable {
         load(textureAtlas);
         load(shieldAtlas);
         load(background);
-
+        load(itemSlot);
+        
         load(shieldSound);
         load(shieldShotSound);
         load(shotSound);

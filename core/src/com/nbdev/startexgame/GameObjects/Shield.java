@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.nbdev.startexgame.Assets.GameAssets;
+import com.nbdev.startexgame.ItemsBar.SlotItem;
 
-public class Shield extends GameObject {
+public class Shield extends GameObject implements SlotItem {
     private static float FLASH_SPEED = 0.3f;
     private float actionTime;
     private float transparency;
@@ -96,5 +97,15 @@ public class Shield extends GameObject {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public float getValue() {
+        return actionTime;
+    }
+
+    @Override
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
     }
 }

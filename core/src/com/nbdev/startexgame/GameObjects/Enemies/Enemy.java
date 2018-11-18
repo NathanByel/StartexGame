@@ -9,14 +9,14 @@ import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Explosion;
 import com.nbdev.startexgame.GameObjects.GameObject;
-import com.nbdev.startexgame.GameObjects.HealthBar;
+import com.nbdev.startexgame.GameObjects.CustomBar;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.Pools.ExplosionPool;
 
 public class Enemy extends GameObject  implements Pool.Poolable {
     private static final Vector2 fastSpeed = new Vector2(0, -200f);
 
-    private HealthBar healthBar;
+    private CustomBar healthBar;
     private boolean visible;
     private Weapon weapon;
 
@@ -24,7 +24,7 @@ public class Enemy extends GameObject  implements Pool.Poolable {
         super(100);
 
         canGetDamage = true;
-        healthBar = new HealthBar(100, 10, Color.GREEN, Color.BLACK);
+        healthBar = new CustomBar(100, 10, false, Color.GREEN, Color.BLACK);
 
         healthBar.setRange(0f, 100f);
         healthBar.setValue(health);
@@ -65,7 +65,7 @@ public class Enemy extends GameObject  implements Pool.Poolable {
 
         healthBar.setPosition(pos.x - healthBar.getWidth()/2, pos.y + getHalfHeight() + 10);
         healthBar.setValue(health);
-        healthBar.act(delta);
+        healthBar.update(delta);
 
         weapon.update(delta);
 

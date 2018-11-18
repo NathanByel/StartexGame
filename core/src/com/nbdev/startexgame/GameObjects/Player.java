@@ -5,16 +5,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
+import com.nbdev.startexgame.ItemsBar.ItemsBar;
 import com.nbdev.startexgame.Pools.ExplosionPool;
 import com.nbdev.startexgame.utils.Regions;
 
 public class Player extends GameObject {
     private Weapon weapon;
     private boolean autoShot;
+    private ItemsBar itemsBar;
     private Shield shield;
 
-    public Player() {
+    public Player(ItemsBar itemsBar) {
         super(100);
+        this.itemsBar = itemsBar;
         canGetDamage = true;
         alive = true;
 
@@ -42,6 +45,7 @@ public class Player extends GameObject {
             shield.setPos(pos);
             shield.update(delta);
             if(!shield.decrementTime(delta)) {
+                itemsBar.removeItem(shield);
                 shield = null;
                 System.out.println("shield off");
             }

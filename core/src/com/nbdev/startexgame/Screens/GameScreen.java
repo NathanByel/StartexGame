@@ -14,6 +14,8 @@ import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
 import com.nbdev.startexgame.GameObjects.Shield;
 import com.nbdev.startexgame.GameObjects.Weapons.Bullet;
+import com.nbdev.startexgame.ItemsBar.ItemsBar;
+import com.nbdev.startexgame.ItemsBar.ItemsBarSlot;
 import com.nbdev.startexgame.Pools.BulletPool;
 import com.nbdev.startexgame.Pools.EnemyPool;
 import com.nbdev.startexgame.Pools.ExplosionPool;
@@ -30,6 +32,7 @@ public class GameScreen extends BaseScreen {
     private int score;
     private boolean gameEnd;
     private Shield shield;
+    private ItemsBar itemsBar;
 
     public GameScreen(final Game game) {
         this.game = game;
@@ -46,7 +49,10 @@ public class GameScreen extends BaseScreen {
         background = new Background();
 
         scoreBar = new ScoreBar();
-        player = new Player();
+        itemsBar = new ItemsBar();
+        itemsBar.setTop(GameScreen.V_HEIGHT - 300);
+
+        player = new Player(itemsBar);
         shield = new Shield();
         EnemyFactory enemyFactory = new EnemyFactory();
         enemyEmitter = new EnemyEmitter(enemyFactory);
@@ -64,6 +70,7 @@ public class GameScreen extends BaseScreen {
 
     private void update(float delta) {
         background.update(delta);
+        itemsBar.update(delta);
 
         if(!gameEnd) {
             if(shield != null && shield.alive) {
@@ -114,6 +121,7 @@ public class GameScreen extends BaseScreen {
 
         if(shield.alive && (shield.getOwner() != player) && !player.isOutside(shield)) {
             player.setShield(shield);
+            itemsBar.addItem(shield);
             System.out.println("got shield");
         }
     }
@@ -122,6 +130,8 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClearColor(0.128f, 0.53f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        batch.setColor(1f, 1f, 1f, 1f);
+
         background.draw(batch);
 
         if(!gameEnd) {
@@ -135,6 +145,7 @@ public class GameScreen extends BaseScreen {
         }
 
         scoreBar.draw(batch);
+        itemsBar.draw(batch);
         batch.end();
     }
 
