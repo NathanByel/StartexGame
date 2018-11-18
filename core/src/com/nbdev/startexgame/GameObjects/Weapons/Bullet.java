@@ -1,18 +1,17 @@
 package com.nbdev.startexgame.GameObjects.Weapons;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
+import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.GameObject;
 import com.nbdev.startexgame.utils.Rect;
 
 public class Bullet extends GameObject implements Pool.Poolable, Disposable {
-    private static Sound damageSound;
+
     private Rect worldBounds;
     private Vector2 v = new Vector2();
     private int damage;
@@ -21,9 +20,6 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
     public Bullet() {
         super(0);
         canGetDamage = false;
-        if(damageSound == null) {
-            damageSound = Gdx.audio.newSound(Gdx.files.internal("sound/damage.mp3"));
-        }
     }
 
     public void set(
@@ -55,7 +51,6 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
     }
 
     public int getDamage() {
-        damageSound.play();
         return damage;
     }
 
@@ -79,6 +74,6 @@ public class Bullet extends GameObject implements Pool.Poolable, Disposable {
 
     @Override
     public void dispose() {
-        damageSound.dispose();
+
     }
 }

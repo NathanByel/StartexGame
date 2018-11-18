@@ -2,54 +2,51 @@ package com.nbdev.startexgame.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.nbdev.startexgame.Assets.MenuAssets;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.Screens.GameScreen;
 import com.nbdev.startexgame.Buttons.ButtonPlay;
 import com.nbdev.startexgame.Buttons.ButtonQuit;
 
 public class MenuScreen extends BaseScreen {
     private final Game game;
-    private Texture background;
-    private TextureAtlas textureAtlas;
+    private MenuAssets menuAssets;
+
     private ButtonPlay buttonPlay;
     private ButtonQuit buttonQuit;
 
-    private Sound buttonSound;
-    private Music music;
-
     public MenuScreen(final Game game) {
         this.game = game;
-        background = new Texture("background.jpg");
-        textureAtlas = new TextureAtlas("menu/menu.tpack");
+    }
 
-        buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/button.wav"));
+    @Override
+    public void show() {
+        menuAssets = new MenuAssets();
+        menuAssets.load();
+        menuAssets.finishLoading(); // Ожидание загрузки ресурсов
 
-        buttonPlay = new ButtonPlay(new Vector2(300, 200), textureAtlas) {
+        buttonPlay = new ButtonPlay(new Vector2(300, 200), menuAssets.get(MenuAssets.textureAtlas)) {
             @Override
             public void buttonUp() {
-                buttonSound.play();
+                menuAssets.get(MenuAssets.buttonSound).play();
                 game.setScreen(new GameScreen(game));
             }
         };
 
-        buttonQuit = new ButtonQuit(new Vector2(BaseScreen.V_WIDTH - 300, 200), textureAtlas) {
+        buttonQuit = new ButtonQuit(new Vector2(BaseScreen.V_WIDTH - 300, 200), menuAssets.get(MenuAssets.textureAtlas)) {
             @Override
             public void buttonUp() {
-                buttonSound.play();
+                menuAssets.get(MenuAssets.buttonSound).play();
                 Gdx.app.exit();
             }
         };
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("sound/main_menu.mp3"));
-        music.setVolume(0.5f);
-        music.setLooping(true);
-        music.play();
+        System.out.println("show menu");
+        super.show();
+        menuAssets.get(MenuAssets.music).setVolume(0.5f);
+        menuAssets.get(MenuAssets.music).setLooping(true);
+        menuAssets.get(MenuAssets.music).play();
     }
 
     @Override
@@ -58,7 +55,7 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        batch.draw(background, 0, 0);
+        batch.draw(menuAssets.get(MenuAssets.background), 0, 0);
         buttonPlay.draw(batch);
         buttonQuit.draw(batch);
         batch.end();
@@ -66,10 +63,8 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void dispose() {
-        background.dispose();
-        textureAtlas.dispose();
-        music.dispose();
-        buttonSound.dispose();
+        System.out.println("dispose menu");
+        menuAssets.dispose();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.nbdev.startexgame.GameObjects.Enemies;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.nbdev.startexgame.Atlas.MainAtlas;
+import com.nbdev.startexgame.Assets.GameAssets;
 
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.Pools.EnemyPool;
@@ -24,9 +24,19 @@ public class EnemyFactory {
     private static final float ENEMY_BIG_HEIGHT = 0.2f;
     private static final int ENEMY_BIG_HP = 20;
 
-    private TextureRegion enemySmallRegion = Regions.split( MainAtlas.getAtlas().findRegion("enemy0"), 1, 2, 2)[0];
-    private TextureRegion enemyMediumRegion = Regions.split( MainAtlas.getAtlas().findRegion("enemy1"), 1, 2, 2)[0];
-    private TextureRegion enemyBigRegion = Regions.split( MainAtlas.getAtlas().findRegion("enemy2"), 1, 2, 2)[0];
+    private TextureRegion enemySmallRegion = Regions.split(
+            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy0"),
+            1, 2, 2)[0];
+
+    private TextureRegion enemyMediumRegion = Regions.split(
+            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy1"),
+            1, 2, 2)[0];
+
+    private TextureRegion enemyBigRegion = Regions.split(
+            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy2"),
+            1, 2, 2)[0];
+
+
     private Vector2 enemySmallV = new Vector2(0, -0.2f);
     private Vector2 enemyMediumV = new Vector2(0, -0.03f);
     private Vector2 enemyBigV = new Vector2(0, -0.005f);

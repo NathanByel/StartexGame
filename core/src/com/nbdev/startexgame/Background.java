@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.nbdev.startexgame.Assets.GameAssets;
 
 import java.util.Random;
 
@@ -15,7 +16,7 @@ public class Background implements Disposable {
     private Random random;
 
     public Background() {
-        background = new Texture("bg2.jpg");
+        background = GameAssets.getInstance().get(GameAssets.background);
         pos = new Vector2();
         v = new Vector2(-20f, -400f);
         random = new Random();
