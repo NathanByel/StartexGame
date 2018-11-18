@@ -8,8 +8,10 @@ import com.badlogic.gdx.utils.Array;
 import com.nbdev.startexgame.Assets.GameAssets;
 
 public class Shield extends GameObject {
+    private static float FLASH_SPEED = 0.3f;
     private float actionTime;
     private float transparency;
+    private float flashSpeed;
     private Animation<TextureRegion> shieldAnimation;
     private float stateTime;
     private Object owner;
@@ -23,6 +25,7 @@ public class Shield extends GameObject {
         shieldAnimation = new Animation<TextureRegion>(0.2f, array);
         shieldAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
+        flashSpeed = FLASH_SPEED;
         transparency = 1f;
         stateTime = 0;
         textureRegion = shieldAnimation.getKeyFrame(stateTime);
@@ -50,6 +53,19 @@ public class Shield extends GameObject {
         textureRegion = shieldAnimation.getKeyFrame(stateTime);
         stateTime += delta;
 
+        if(actionTime <= 1f) {
+            transparency = actionTime;
+        } else {
+            transparency += flashSpeed * delta;
+            if(transparency > 1f) {
+                transparency = 1f;
+                flashSpeed = -FLASH_SPEED;
+            } else if(transparency < 0.3f) {
+                transparency = 0.3f;
+                flashSpeed = FLASH_SPEED;
+            }
+        }
+
         if (getTop() < 0) {
             alive = false;
         }
@@ -57,7 +73,7 @@ public class Shield extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.setColor(1f,0.5f,0.5f, transparency);
+        batch.setColor(1f,1f,1f, transparency);
         super.draw(batch);
         batch.setColor(1f,1f,1f, 1f);
     }
@@ -71,9 +87,6 @@ public class Shield extends GameObject {
             return false;
         }
 
-        if(actionTime <= 1f) {
-            transparency = actionTime;
-        }
         return true;
     }
 
