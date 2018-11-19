@@ -34,16 +34,19 @@ public class Shield extends GameObject implements SlotItem {
         setHeightProportion(textureRegion.getRegionHeight());
     }
 
-    public void set(GameObject owner, Vector2 pos, Vector2 v, float actionTime) {
+    @Override
+    public void set(Object owner, Vector2 pos, Vector2 v, float actionTime) {
         this.owner = owner;
         this.transparency = 1f;
         this.pos.set(pos);
         this.v.set(v);
         this.actionTime = actionTime;
+        setHeightProportion(120f);
         alive = true;
     }
 
-    public void set(GameObject owner) {
+    @Override
+    public void setOwner(Object owner) {
         this.owner = owner;
         this.transparency = 1f;
         this.v.set(0, 0);
@@ -92,12 +95,17 @@ public class Shield extends GameObject implements SlotItem {
         return true;
     }
 
-    public Object getOwner() {
-        return owner;
+    public float getActionTime() {
+        return actionTime;
+    }
+
+    public void setActionTime(float actionTime) {
+        this.actionTime = actionTime;
     }
 
     @Override
-    public void dispose() {
+    public Object getOwner() {
+        return owner;
     }
 
     @Override
@@ -108,5 +116,9 @@ public class Shield extends GameObject implements SlotItem {
     @Override
     public TextureRegion getTextureRegion() {
         return textureRegion;
+    }
+
+    @Override
+    public void dispose() {
     }
 }

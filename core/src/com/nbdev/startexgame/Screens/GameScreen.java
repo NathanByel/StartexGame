@@ -3,6 +3,7 @@ package com.nbdev.startexgame.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.nbdev.startexgame.Assets.GameAssets;
@@ -11,14 +12,20 @@ import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Enemies.EnemyEmitter;
 import com.nbdev.startexgame.GameObjects.Enemies.EnemyFactory;
 import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
+import com.nbdev.startexgame.GameObjects.ItemsEmmiter;
 import com.nbdev.startexgame.GameObjects.Player;
 import com.nbdev.startexgame.GameObjects.Shields.Shield;
 import com.nbdev.startexgame.GameObjects.Weapons.Bullet;
+import com.nbdev.startexgame.GameObjects.Weapons.RotatorWeapon;
+import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.ItemsBar.ItemsBar;
+import com.nbdev.startexgame.ItemsBar.SlotItem;
 import com.nbdev.startexgame.Pools.BulletPool;
 import com.nbdev.startexgame.Pools.EnemyPool;
 import com.nbdev.startexgame.Pools.ExplosionPool;
 import com.nbdev.startexgame.ScoreBar;
+
+import java.util.ArrayList;
 
 public class GameScreen extends BaseScreen {
     private final Game game;
@@ -30,8 +37,12 @@ public class GameScreen extends BaseScreen {
 
     private int score;
     private boolean gameEnd;
-    private Shield shield;
     private ItemsBar itemsBar;
+    private ItemsEmmiter itemsEmmiter;
+
+    private ArrayList<SlotItem> items;
+    private SlotItem item;
+
 
     public GameScreen(final Game game) {
         this.game = game;
@@ -40,6 +51,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
+        items = new ArrayList<SlotItem>();
         System.out.println("show game");
 
         GameAssets.getInstance().load();
@@ -51,8 +63,10 @@ public class GameScreen extends BaseScreen {
         itemsBar = new ItemsBar();
         itemsBar.setTop(GameScreen.V_HEIGHT - 300);
 
+        itemsEmmiter = new ItemsEmmiter();
+
         player = new Player(itemsBar);
-        shield = new Shield();
+
         EnemyFactory enemyFactory = new EnemyFactory();
         enemyEmitter = new EnemyEmitter(enemyFactory);
 
@@ -71,10 +85,11 @@ public class GameScreen extends BaseScreen {
         background.update(delta);
         itemsBar.update(delta);
 
+        if(item != null && item.getOwner() == null) {
+            item.update(delta);
+        }
+
         if(!gameEnd) {
-            if(shield != null && shield.alive) {
-                shield.update(delta);
-            }
             player.update(delta);
             BulletPool.getPool().update(delta);
             ExplosionPool.getPool().update(delta);
@@ -113,19 +128,17 @@ public class GameScreen extends BaseScreen {
                     if(enemy.damage(bullet.getDamage())) {
                         score++;
 
-                        if(!shield.alive) {
-                            shield.setHeightProportion(100);
-                            shield.set(null, enemy.getPos(), new Vector2(0, -300f), 8f);
+                        if(item == null || !item.isAlive()) {
+                            item = itemsEmmiter.getItem(enemy.getPos());
                         }
                     }
                 }
             }
         }
 
-        if(shield.alive && (shield.getOwner() != player) && !player.isOutside(shield)) {
-            player.setShield(shield);
-            itemsBar.addItem(shield);
-            System.out.println("got shield");
+        if(item != null && item.isAlive() && item.getOwner() == null && !player.isOutside(item) ) {
+            player.pickUp(item);
+            item = null;
         }
     }
 
@@ -136,9 +149,6 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
 
         if(!gameEnd) {
-            if(shield != null && shield.alive) {
-                shield.draw(batch);
-            }
             player.draw(batch);
             BulletPool.getPool().draw(batch);
             ExplosionPool.getPool().draw(batch);
@@ -147,6 +157,11 @@ public class GameScreen extends BaseScreen {
 
         scoreBar.draw(batch);
         itemsBar.draw(batch);
+
+        if(item != null && item.getOwner() == null) {
+            item.draw(batch);
+        }
+
         batch.end();
     }
 

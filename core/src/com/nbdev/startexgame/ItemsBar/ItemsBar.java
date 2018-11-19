@@ -23,14 +23,10 @@ public class ItemsBar {
         if(itemSlots.size() >= 5) {
            // removeItem();
         }
-
-        float itemTop = barTop;
-        for (ItemsBarSlot itemSlot : itemSlots) {
-            itemTop -= (itemSlot.getHeight() + SLOTS_SPACE);
-        }
+        float lastItemBottom = itemSlots.size() == 0 ? barTop : itemSlots.get(itemSlots.size() - 1).getBottom();
 
         ItemsBarSlot itemsBarSlot = new ItemsBarSlot();
-        itemsBarSlot.setTop(itemTop);
+        itemsBarSlot.setTop(lastItemBottom - SLOTS_SPACE);
         itemsBarSlot.setItem(slotItem);
         itemSlots.add(itemsBarSlot);
     }
@@ -54,12 +50,13 @@ public class ItemsBar {
         }
 
         // сдвигаем слоты
-        for (int i = itemSlots.size()-1; i > 0; i--) {
-            float slotTop = itemSlots.get(i).getTop();
-            float prevSlotBottom = itemSlots.get(i-1).getBottom();
+        for (int i = itemSlots.size()-1; i >= 0; i--) {
+            ItemsBarSlot slot = itemSlots.get(i);
+            float slotTop = slot.getTop();
+            float prevSlotBottom = (i == 0) ? barTop : itemSlots.get(i-1).getBottom();
 
             if(slotTop < prevSlotBottom - SLOTS_SPACE) {
-                itemSlots.get(i).setTop( slotTop + SLOTS_MOVE_SPEED * delta );
+                slot.setTop( slotTop + SLOTS_MOVE_SPEED * delta );
             }
         }
     }

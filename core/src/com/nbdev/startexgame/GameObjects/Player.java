@@ -5,10 +5,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Shields.Shield;
-import com.nbdev.startexgame.GameObjects.Weapons.RotatorWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.SmallWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.ItemsBar.ItemsBar;
+import com.nbdev.startexgame.ItemsBar.SlotItem;
 import com.nbdev.startexgame.Pools.ExplosionPool;
 import com.nbdev.startexgame.utils.Regions;
 
@@ -48,9 +48,17 @@ public class Player extends GameObject {
             shield.update(delta);
             if(!shield.decrementTime(delta)) {
                 itemsBar.removeItem(shield);
+                shield.alive = false;
                 shield = null;
                 System.out.println("shield off");
             }
+        }
+
+        if(weapon.getValue() == 0) {
+            itemsBar.removeItem(weapon);
+            weapon.alive = false;
+            weapon = new SmallWeapon(this, false);
+            System.out.println("standart weapon");
         }
 
         if(autoShot) {
@@ -94,13 +102,6 @@ public class Player extends GameObject {
         }
     }
 
-    public void setShield(Shield shield) {
-        this.shield = shield;
-        shield.set(this);
-        shield.setHeightProportion(getHeight() + 100);
-        GameAssets.getInstance().get(GameAssets.shieldSound).loop(0.7f);
-    }
-
     public void destroy() {
         health = 0;
         alive = false;
@@ -134,5 +135,33 @@ public class Player extends GameObject {
 
     @Override
     public void dispose() {
+    }
+
+    public void pickUp(SlotItem item) {
+        if(item instanceof Shield) {
+            Shield newShield = (Shield) item;
+            if(shield == null) {
+                shield = newShield;
+                shield.set(this);
+                shield.setOwner(this);
+                shield.setHeightProportion(getHeight() + 100);
+                GameAssets.getInstance().get(GameAssets.shieldSound).loop(0.7f);
+
+                itemsBar.addItem(item);
+                System.out.println("got shield");
+            } else {
+                shield.setActionTime(newShield.getActionTime());
+                newShield.alive = false;
+            }
+        } else if(item instanceof Weapon) {
+            Weapon newWeapon = (Weapon) item;
+            if(weapon instanceof SmallWeapon) {
+                weapon = newWeapon;
+                weapon.setOwner(this);
+
+                itemsBar.addItem(item);
+                System.out.println("got weapon");
+            }
+        }
     }
 }
