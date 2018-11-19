@@ -36,6 +36,8 @@ public class ItemsBarSlot extends Sprite {
         setRight(xPos);
 
         sprite = new Sprite();
+        sprite.setLeft(getLeft());
+        sprite.setBottom(getBottom());
 
         bar = new CustomBar((int)(getWidth() * 0.1f), (int)(getHeight() * 0.8f), true, Color.BLUE, Color.CLEAR);
         barBottomOffset = (int)((getHeight() - bar.getHeight()) / 2f);

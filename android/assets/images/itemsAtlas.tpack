@@ -72,56 +72,56 @@ front_shield
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 1
+  index: 0
 front_shield
   rotate: false
   xy: 1, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 10
+  index: 1
 front_shield
   rotate: false
   xy: 515, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 11
+  index: 10
 front_shield
   rotate: false
   xy: 1029, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 12
+  index: 11
 front_shield
   rotate: false
   xy: 1543, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 13
+  index: 12
 front_shield
   rotate: false
   xy: 2057, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 14
+  index: 13
 front_shield
   rotate: false
   xy: 2571, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 15
+  index: 14
 front_shield
   rotate: false
   xy: 3085, 3169
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
-  index: 16
+  index: 15
 front_shield
   rotate: false
   xy: 3599, 3169

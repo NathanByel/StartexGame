@@ -97,7 +97,7 @@ public class Bullet extends GameObject implements Pool.Poolable {
 
         stateTime += delta;
 
-        if (pos.y >= BaseScreen.V_HEIGHT) {
+        if (pos.y < 0 || pos.y >= BaseScreen.V_HEIGHT) {
             alive = false;
         }
     }
@@ -105,6 +105,10 @@ public class Bullet extends GameObject implements Pool.Poolable {
     public int getDamage() {
 
         return damage;
+    }
+
+    public Vector2 getV() {
+        return v;
     }
 
     public void setDamage(int damage) {

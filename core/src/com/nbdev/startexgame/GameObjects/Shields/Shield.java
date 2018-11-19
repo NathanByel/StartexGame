@@ -1,37 +1,30 @@
 package com.nbdev.startexgame.GameObjects.Shields;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.GameObjects.GameObject;
 import com.nbdev.startexgame.ItemsBar.SlotItem;
 
-public class Shield extends GameObject implements SlotItem {
+public abstract class Shield extends GameObject implements SlotItem {
     private static final float FLASH_SPEED = 0.3f;
     private float actionTime;
     private float transparency;
     private float flashSpeed;
-    private Animation<TextureRegion> shieldAnimation;
-    private float stateTime;
-    private Object owner;
+
+    protected Animation<TextureRegion> shieldAnimation;
+    protected Animation<TextureRegion> hitAnimation;
+    protected float stateTime;
+    protected Object owner;
+    protected Sound shieldSound;
+    protected Sound hitSound;
 
     public Shield() {
-        Array<TextureRegion> array = new Array<TextureRegion>();
-        for (int i = 0; i <= 10; i++) {
-            array.add(GameAssets.getInstance().get(GameAssets.itemsAtlas).findRegion("shield1", i));
-        }
-
-        shieldAnimation = new Animation<TextureRegion>(0.2f, array);
-        shieldAnimation.setPlayMode(Animation.PlayMode.LOOP);
-
         flashSpeed = FLASH_SPEED;
         transparency = 1f;
         stateTime = 0;
-        textureRegion = shieldAnimation.getKeyFrame(stateTime);
-        setHeightProportion(textureRegion.getRegionHeight());
     }
 
     @Override
@@ -41,6 +34,8 @@ public class Shield extends GameObject implements SlotItem {
         this.pos.set(pos);
         this.v.set(v);
         this.actionTime = actionTime;
+
+        textureRegion = shieldAnimation.getKeyFrame(stateTime);
         setHeightProportion(120f);
         alive = true;
     }
@@ -50,6 +45,9 @@ public class Shield extends GameObject implements SlotItem {
         this.owner = owner;
         this.transparency = 1f;
         this.v.set(0, 0);
+        if(owner != null) {
+            shieldSound.loop(0.7f);
+        }
     }
 
     @Override
@@ -83,10 +81,14 @@ public class Shield extends GameObject implements SlotItem {
         batch.setColor(1f,1f,1f, 1f);
     }
 
+    public void hit() {
+        hitSound.play();
+    }
+
     public boolean decrementTime(float delta) {
         actionTime -= delta;
         if(actionTime <= 0) {
-            GameAssets.getInstance().get(GameAssets.shieldSound).stop();
+            shieldSound.stop();
             alive = false;
             owner = null;
             return false;
@@ -94,6 +96,8 @@ public class Shield extends GameObject implements SlotItem {
 
         return true;
     }
+
+    public abstract int action(GameObject object);
 
     public float getActionTime() {
         return actionTime;

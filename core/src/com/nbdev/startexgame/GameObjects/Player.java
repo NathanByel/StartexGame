@@ -1,10 +1,12 @@
 package com.nbdev.startexgame.GameObjects;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Shields.Shield;
+import com.nbdev.startexgame.GameObjects.Weapons.Bullet;
 import com.nbdev.startexgame.GameObjects.Weapons.SmallWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.ItemsBar.ItemsBar;
@@ -13,16 +15,19 @@ import com.nbdev.startexgame.Pools.ExplosionPool;
 import com.nbdev.startexgame.utils.Regions;
 
 public class Player extends GameObject {
-    private Weapon weapon;
-    private boolean autoShot;
     private ItemsBar itemsBar;
+    private Weapon weapon;
     private Shield shield;
+    private boolean autoShot;
+    private Sound getItemSound;
 
     public Player(ItemsBar itemsBar) {
         super(100);
         this.itemsBar = itemsBar;
         canGetDamage = true;
         alive = true;
+
+        getItemSound = GameAssets.getInstance().get(GameAssets.getItemSound);
 
         this.textureRegion = Regions.split(
                 GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("main_ship"),
@@ -84,22 +89,32 @@ public class Player extends GameObject {
         return false;
     }
 
-    public boolean damage(int damage) {
+    public boolean hit(GameObject object) {
+        int damage = 0;
         if(shield != null) {
-            GameAssets.getInstance().get(GameAssets.shieldHitSound).play();
-            return false;
+            shield.hit();
+            damage = shield.action(object);
+        } else {
+            if(object instanceof Bullet) {
+                Bullet bullet = (Bullet) object;
+                damage = bullet.getDamage();
+                bullet.hit();
+            }
         }
 
-        int dh = health - damage;
-        if (dh <= 0) {
-            health = 0;
-            destroy();
-            return true;
-        } else {
-            health = dh;
-            System.out.println("player damage");
-            return false;
+        if(damage > 0) {
+            int dh = health - damage;
+            if (dh <= 0) {
+                health = 0;
+                destroy();
+                return true;
+            } else {
+                health = dh;
+                System.out.println("player damage");
+                return false;
+            }
         }
+        return false;
     }
 
     public void destroy() {
@@ -145,14 +160,25 @@ public class Player extends GameObject {
                 shield.set(this);
                 shield.setOwner(this);
                 shield.setHeightProportion(getHeight() + 100);
-                GameAssets.getInstance().get(GameAssets.shieldSound).loop(0.7f);
 
                 itemsBar.addItem(item);
                 System.out.println("got shield");
-            } else {
+            } else if (newShield.getClass() == shield.getClass()){
                 shield.setActionTime(newShield.getActionTime());
                 newShield.alive = false;
+            } else {
+                itemsBar.removeItem(shield);
+                shield.alive = false;
+
+                shield = newShield;
+                shield.set(this);
+                shield.setOwner(this);
+                shield.setHeightProportion(getHeight() + 100);
+
+                itemsBar.addItem(item);
+                System.out.println("got new shield");
             }
+            getItemSound.play();
         } else if(item instanceof Weapon) {
             Weapon newWeapon = (Weapon) item;
             if(weapon instanceof SmallWeapon) {
@@ -161,7 +187,10 @@ public class Player extends GameObject {
 
                 itemsBar.addItem(item);
                 System.out.println("got weapon");
+            } else if (newWeapon.getClass() == weapon.getClass()){
+                weapon.setBulletsAmount(newWeapon.getBulletsAmount());
             }
+            getItemSound.play();
         }
     }
 }

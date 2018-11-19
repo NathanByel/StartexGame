@@ -24,7 +24,7 @@ public class GameAssets extends AssetManager implements Disposable {
             new AssetDescriptor<Texture>("images/bg2.jpg", Texture.class);
 
     public static final AssetDescriptor<Music> music =
-            new AssetDescriptor<Music>("sound/music.mp3", Music.class);
+            new AssetDescriptor<Music>("sound/music1.mp3", Music.class);
 
     public static final AssetDescriptor<Sound> destroyedSound =
             new AssetDescriptor<Sound>("sound/destroyed.mp3", Sound.class);
@@ -46,6 +46,9 @@ public class GameAssets extends AssetManager implements Disposable {
 
     public static final AssetDescriptor<Sound> shieldHitSound =
             new AssetDescriptor<Sound>("sound/shield_hit.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> getItemSound =
+            new AssetDescriptor<Sound>("sound/get_item.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> shieldSound =
             new AssetDescriptor<Sound>("sound/shield.mp3", Sound.class);
@@ -71,6 +74,7 @@ public class GameAssets extends AssetManager implements Disposable {
         load(hit2Sound);
         load(shieldHitSound);
         load(shieldSound);
+        load(getItemSound);
         load(destroyedSound);
         load(music);
     }
@@ -84,6 +88,7 @@ public class GameAssets extends AssetManager implements Disposable {
         get(hit1Sound).stop();
         get(hit2Sound).stop();
         get(shieldHitSound).stop();
+        get(getItemSound).stop();
         get(destroyedSound).stop();
         get(music).stop();
         super.dispose();

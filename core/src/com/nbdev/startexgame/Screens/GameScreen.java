@@ -110,8 +110,8 @@ public class GameScreen extends BaseScreen {
                 }
 
                 if(player.alive && !bullet.isOutside(player) && bullet.getOwner() != player) {
-                    bullet.hit();
-                    if(player.damage(bullet.getDamage())) {
+                    //bullet.hit();
+                    if(player.hit(bullet)) {
                         System.out.println("set menu screen");
                         Timer.schedule(new Timer.Task(){
                             @Override

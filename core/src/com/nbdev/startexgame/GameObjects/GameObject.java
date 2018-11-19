@@ -6,6 +6,7 @@ import com.nbdev.startexgame.utils.Sprite;
 
 public abstract class GameObject extends Sprite implements Disposable {
     protected int health;
+
     public boolean alive;
     protected boolean canGetDamage;
     protected Vector2 v = new Vector2();
