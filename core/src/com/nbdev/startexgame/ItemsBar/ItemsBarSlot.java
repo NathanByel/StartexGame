@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.nbdev.startexgame.Assets.GameAssets;
-import com.nbdev.startexgame.GameObjects.CustomBar;
+import com.nbdev.startexgame.utils.CustomBar;
 import com.nbdev.startexgame.Screens.GameScreen;
 import com.nbdev.startexgame.utils.Sprite;
 

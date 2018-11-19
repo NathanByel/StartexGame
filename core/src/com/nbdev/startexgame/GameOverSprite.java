@@ -6,7 +6,7 @@ import com.nbdev.startexgame.utils.Sprite;
 
 public class GameOverSprite extends Sprite {
     public GameOverSprite(Vector2 pos) {
-        textureRegion = GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("message_game_over");
+        textureRegion = GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("message_game_over");
         this.pos.set(pos);
         setHeightProportion(textureRegion.getRegionHeight());
         setScale(2f);

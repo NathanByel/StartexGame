@@ -9,7 +9,7 @@ import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
 import com.nbdev.startexgame.GameObjects.Explosion;
 import com.nbdev.startexgame.GameObjects.GameObject;
-import com.nbdev.startexgame.GameObjects.CustomBar;
+import com.nbdev.startexgame.utils.CustomBar;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.Pools.ExplosionPool;
 
@@ -93,7 +93,6 @@ public class Enemy extends GameObject  implements Pool.Poolable {
     }
 
     public boolean damage(int damage) {
-        GameAssets.getInstance().get(GameAssets.damageSound).play();
         int dh = health - damage;
         if(dh <= 0) {
             destroy();
@@ -115,7 +114,7 @@ public class Enemy extends GameObject  implements Pool.Poolable {
         Explosion explosion = ExplosionPool.getPool().obtain();
         explosion.setHeightProportion(getHeight());
         explosion.setPos(pos);
-        GameAssets.getInstance().get(GameAssets.destroyedSound);
+        GameAssets.getInstance().get(GameAssets.destroyedSound).play();
     }
 
     @Override

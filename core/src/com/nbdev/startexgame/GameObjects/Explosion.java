@@ -14,7 +14,7 @@ public class Explosion extends GameObject implements Pool.Poolable {
     public Explosion() {
         explodeAnimation = new Animation<TextureRegion>(
                 0.01f,
-                Regions.split( GameAssets.getInstance().get(GameAssets.textureAtlas).
+                Regions.split( GameAssets.getInstance().get(GameAssets.mainAtlas).
                                 findRegion("explosion"), 9, 9, 81)
         );
         stateTime = 0;

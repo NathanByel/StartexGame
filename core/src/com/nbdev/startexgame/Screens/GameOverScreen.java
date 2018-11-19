@@ -31,8 +31,7 @@ public class GameOverScreen  extends BaseScreen {
         gameOverSprite = new GameOverSprite( new Vector2(BaseScreen.V_WIDTH/2, BaseScreen.V_HEIGHT/2) );
 
         buttonNewGame = new ButtonNewGame(
-                new Vector2(BaseScreen.V_WIDTH/2, BaseScreen.V_HEIGHT/3),
-                GameAssets.getInstance().get(GameAssets.textureAtlas)) {
+                new Vector2(BaseScreen.V_WIDTH/2, BaseScreen.V_HEIGHT/3)) {
             @Override
             public void buttonUp() {
                 game.setScreen(new GameScreen(game));

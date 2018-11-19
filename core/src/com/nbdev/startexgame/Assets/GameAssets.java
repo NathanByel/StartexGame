@@ -1,6 +1,5 @@
 package com.nbdev.startexgame.Assets;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -12,11 +11,11 @@ import com.badlogic.gdx.utils.Disposable;
 public class GameAssets extends AssetManager implements Disposable {
     private static GameAssets gameAssets;
 
-    public static final AssetDescriptor<TextureAtlas> textureAtlas =
+    public static final AssetDescriptor<TextureAtlas> mainAtlas =
             new AssetDescriptor<TextureAtlas>("images/mainAtlas.tpack", TextureAtlas.class);
 
-    public static final AssetDescriptor<TextureAtlas> shieldAtlas =
-            new AssetDescriptor<TextureAtlas>("images/shieldAtlas.tpack", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> itemsAtlas =
+            new AssetDescriptor<TextureAtlas>("images/itemsAtlas.tpack", TextureAtlas.class);
 
     public static final AssetDescriptor<Texture> itemSlot =
             new AssetDescriptor<Texture>("images/item_slot.png", Texture.class);
@@ -30,17 +29,26 @@ public class GameAssets extends AssetManager implements Disposable {
     public static final AssetDescriptor<Sound> destroyedSound =
             new AssetDescriptor<Sound>("sound/destroyed.mp3", Sound.class);
 
-    public static final AssetDescriptor<Sound> damageSound =
-            new AssetDescriptor<Sound>("sound/damage.mp3", Sound.class);
+    public static final AssetDescriptor<Sound> hitSound =
+            new AssetDescriptor<Sound>("sound/hit.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> hit1Sound =
+            new AssetDescriptor<Sound>("sound/hit1.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> hit2Sound =
+            new AssetDescriptor<Sound>("sound/hit2.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> shotSound =
-            new AssetDescriptor<Sound> ("sound/shot.mp3", Sound.class);
+            new AssetDescriptor<Sound>("sound/shot.wav", Sound.class);
 
-    public static final AssetDescriptor<Sound> shieldShotSound =
-            new AssetDescriptor<Sound> ("sound/shield_shot.wav", Sound.class);
+    public static final AssetDescriptor<Sound> shot1Sound =
+            new AssetDescriptor<Sound>("sound/shot1.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> shieldHitSound =
+            new AssetDescriptor<Sound>("sound/shield_hit.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> shieldSound =
-            new AssetDescriptor<Sound> ("sound/shield.mp3", Sound.class);
+            new AssetDescriptor<Sound>("sound/shield.mp3", Sound.class);
 
     public static GameAssets getInstance() {
         if (gameAssets == null) {
@@ -51,26 +59,31 @@ public class GameAssets extends AssetManager implements Disposable {
 
     public void load()
     {
-        load(textureAtlas);
-        load(shieldAtlas);
+        load(mainAtlas);
+        load(itemsAtlas);
         load(background);
         load(itemSlot);
-        
-        load(shieldSound);
-        load(shieldShotSound);
+
         load(shotSound);
-        load(damageSound);
+        load(shot1Sound);
+        load(hitSound);
+        load(hit1Sound);
+        load(hit2Sound);
+        load(shieldHitSound);
+        load(shieldSound);
         load(destroyedSound);
         load(music);
     }
 
-
     @Override
     public void dispose() {
         get(shieldSound).stop();
-        get(shieldShotSound).stop();
         get(shotSound).stop();
-        get(damageSound).stop();
+        get(shot1Sound).stop();
+        get(hitSound).stop();
+        get(hit1Sound).stop();
+        get(hit2Sound).stop();
+        get(shieldHitSound).stop();
         get(destroyedSound).stop();
         get(music).stop();
         super.dispose();

@@ -28,15 +28,15 @@ public class EnemyFactory {
     private static final int ENEMY_BIG_HP = 20;
 
     private TextureRegion enemySmallRegion = Regions.split(
-            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy0"),
+            GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("enemy0"),
             1, 2, 2)[0];
 
     private TextureRegion enemyMediumRegion = Regions.split(
-            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy1"),
+            GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("enemy1"),
             1, 2, 2)[0];
 
     private TextureRegion enemyBigRegion = Regions.split(
-            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy2"),
+            GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("enemy2"),
             1, 2, 2)[0];
 
 

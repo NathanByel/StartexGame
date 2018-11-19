@@ -10,6 +10,7 @@ public abstract class Weapon {
     public static final int INFINITY_BULLETS = Integer.MIN_VALUE;
     protected Vector2 bulletV = new Vector2();
     protected float bulletHeight;
+    protected float bulletHitHeight;
     protected int bulletDamage;
     protected float reloadInterval;
 
@@ -19,11 +20,13 @@ public abstract class Weapon {
 
     private Object owner;
     private Sound shotSound;
+    private Sound hitSound;
     private float reloadTimer;
 
-    public Weapon(Object owner, Sound shotSound) {
+    public Weapon(Object owner, Sound shotSound, Sound hitSound) {
         this.owner = owner;
         this.shotSound = shotSound;
+        this.hitSound = hitSound;
         this.bulletsAmount = INFINITY_BULLETS;
     }
 
@@ -33,9 +36,11 @@ public abstract class Weapon {
             bullet.set(owner,
                     bulletAnimation,
                     hitAnimation,
+                    hitSound,
                     pos,
                     bulletV,
                     bulletHeight,
+                    bulletHitHeight,
                     null,
                     bulletDamage);
 

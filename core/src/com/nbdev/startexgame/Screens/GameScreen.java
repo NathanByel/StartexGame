@@ -12,10 +12,9 @@ import com.nbdev.startexgame.GameObjects.Enemies.EnemyEmitter;
 import com.nbdev.startexgame.GameObjects.Enemies.EnemyFactory;
 import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
 import com.nbdev.startexgame.GameObjects.Player;
-import com.nbdev.startexgame.GameObjects.Shield;
+import com.nbdev.startexgame.GameObjects.Shields.Shield;
 import com.nbdev.startexgame.GameObjects.Weapons.Bullet;
 import com.nbdev.startexgame.ItemsBar.ItemsBar;
-import com.nbdev.startexgame.ItemsBar.ItemsBarSlot;
 import com.nbdev.startexgame.Pools.BulletPool;
 import com.nbdev.startexgame.Pools.EnemyPool;
 import com.nbdev.startexgame.Pools.ExplosionPool;
@@ -91,8 +90,12 @@ public class GameScreen extends BaseScreen {
     private void collisionCheck() {
         for (Enemy enemy : EnemyPool.getPool().getActive()) {
             for (Bullet bullet : BulletPool.getPool().getActive()) {
+                if(bullet.getState() != Bullet.State.MOVE) {
+                    continue;
+                }
+
                 if(player.alive && !bullet.isOutside(player) && bullet.getOwner() != player) {
-                    bullet.alive = false;
+                    bullet.hit();
                     if(player.damage(bullet.getDamage())) {
                         System.out.println("set menu screen");
                         Timer.schedule(new Timer.Task(){
@@ -106,7 +109,7 @@ public class GameScreen extends BaseScreen {
                         return;
                     }
                 } else if (!bullet.isOutside(enemy) && bullet.getOwner() == player) {
-                    bullet.alive = false;
+                    bullet.hit();
                     if(enemy.damage(bullet.getDamage())) {
                         score++;
 

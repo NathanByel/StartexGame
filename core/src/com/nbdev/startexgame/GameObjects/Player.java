@@ -4,7 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Assets.GameAssets;
 import com.nbdev.startexgame.BaseScreen;
-import com.nbdev.startexgame.GameObjects.Weapons.BigWeapon;
+import com.nbdev.startexgame.GameObjects.Shields.Shield;
+import com.nbdev.startexgame.GameObjects.Weapons.RotatorWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.SmallWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.ItemsBar.ItemsBar;
@@ -24,7 +25,7 @@ public class Player extends GameObject {
         alive = true;
 
         this.textureRegion = Regions.split(
-                GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("main_ship"),
+                GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("main_ship"),
                 1,
                 2,
                 2)[0];
@@ -77,11 +78,10 @@ public class Player extends GameObject {
 
     public boolean damage(int damage) {
         if(shield != null) {
-            GameAssets.getInstance().get(GameAssets.shieldShotSound).play();
+            GameAssets.getInstance().get(GameAssets.shieldHitSound).play();
             return false;
         }
 
-        GameAssets.getInstance().get(GameAssets.damageSound).play();
         int dh = health - damage;
         if (dh <= 0) {
             health = 0;
@@ -107,7 +107,7 @@ public class Player extends GameObject {
         Explosion explosion = ExplosionPool.getPool().obtain();
         explosion.setHeightProportion(getHeight());
         explosion.setPos(pos);
-        GameAssets.getInstance().get(GameAssets.destroyedSound);
+        GameAssets.getInstance().get(GameAssets.destroyedSound).play();
     }
 
     // Control
