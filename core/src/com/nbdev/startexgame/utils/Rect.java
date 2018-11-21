@@ -1,6 +1,7 @@
 package com.nbdev.startexgame.utils;
 
 import com.badlogic.gdx.math.Vector2;
+import com.nbdev.startexgame.ItemsBar.SlotItem;
 
 /**
  * Прямоугольник
@@ -62,6 +63,10 @@ public class Rect {
         halfHeight = from.halfHeight;
     }
 
+    public Rect getRect() {
+        return this;
+    }
+
     public void setLeft(float left) {
         pos.x = left + halfWidth;
     }
@@ -93,6 +98,10 @@ public class Rect {
 
     public boolean isMe(Vector2 touch) {
         return touch.x >= getLeft() && touch.x <= getRight() && touch.y >= getBottom() && touch.y <= getTop();
+    }
+
+    public boolean isOutside(SlotItem other) {
+        return this.isOutside( other.getRect() );
     }
 
     public boolean isOutside(Rect other) {

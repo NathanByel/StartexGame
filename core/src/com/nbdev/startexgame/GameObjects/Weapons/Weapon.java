@@ -1,109 +1,129 @@
 package com.nbdev.startexgame.GameObjects.Weapons;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Disposable;
-import com.nbdev.startexgame.Assets.GameAssets;
+import com.nbdev.startexgame.GameObjects.GameObject;
+import com.nbdev.startexgame.ItemsBar.SlotItem;
 import com.nbdev.startexgame.Pools.BulletPool;
 
-public class Weapon implements Disposable {
-    public enum Type {
-        SMALL_WEAPON,
-        MEDIUM_WEAPON,
-        BIG_WEAPON
-    }
+public abstract class Weapon extends GameObject implements SlotItem {
+    public static final int INFINITY_BULLETS = Integer.MIN_VALUE;
+    protected Vector2 bulletV = new Vector2();
+    protected float bulletHeight;
+    protected float bulletHitHeight;
+    protected int bulletDamage;
+    protected float reloadInterval;
 
-    private static final float SMALL_BULLET_VY = -0.3f;
-    private static final float SMALL_BULLET_HEIGHT = 0.01f;
-    private static final int SMALL_BULLET_DAMAGE = 1;
-    private static final float SMALL_RELOAD_INTERVAL = 3f;
-
-    private static final float MEDIUM_BULLET_VY = -0.3f;
-    private static final float MEDIUM_BULLET_HEIGHT = 0.02f;
-    private static final int MEDIUM_BULLET_DAMAGE = 5;
-    private static final float MEDIUM_RELOAD_INTERVAL = 4f;
-
-    private static final float BIG_BULLET_VY = -0.25f;
-    private static final float BIG_BULLET_HEIGHT = 0.06f;
-    private static final int BIG_BULLET_DAMAGE = 12;
-    private static final float BIG_RELOAD_INTERVAL = 4f;
+    protected Animation<TextureRegion> bulletAnimation;
+    protected Animation<TextureRegion> hitAnimation;
+    protected int bulletsAmount;
 
     private Object owner;
-    private Vector2 bulletV = new Vector2();
-    private float bulletHeight;
-    private int bulletDamage;
-
-    private float reloadInterval;
+    private Sound shotSound;
+    private Sound hitSound;
     private float reloadTimer;
-    private TextureRegion textureRegion;
 
-    public Weapon(Object owner) {
+    public Weapon(Object owner, Sound shotSound, Sound hitSound) {
         this.owner = owner;
-    }
-
-    public void set(Type type, boolean enemy) {
-        switch (type) {
-            case SMALL_WEAPON:
-                bulletV.y = SMALL_BULLET_VY;
-                bulletHeight = SMALL_BULLET_HEIGHT;
-                bulletDamage = SMALL_BULLET_DAMAGE;
-                reloadInterval = SMALL_RELOAD_INTERVAL;
-                break;
-
-            case MEDIUM_WEAPON:
-                bulletV.y = MEDIUM_BULLET_VY;
-                bulletHeight = MEDIUM_BULLET_HEIGHT;
-                bulletDamage = MEDIUM_BULLET_DAMAGE;
-                reloadInterval = MEDIUM_RELOAD_INTERVAL;
-                break;
-
-            case BIG_WEAPON:
-                bulletV.y = BIG_BULLET_VY;
-                bulletHeight = BIG_BULLET_HEIGHT;
-                bulletDamage = BIG_BULLET_DAMAGE;
-                reloadInterval = BIG_RELOAD_INTERVAL;
-                break;
-        }
-
-        if (enemy) {
-            //textureRegion = MainAtlas.getAtlas().findRegion("bulletEnemy");
-            textureRegion =  GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("bulletEnemy");
-        } else {
-            //textureRegion = MainAtlas.getAtlas().findRegion("bulletMainShip");
-            textureRegion = GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("bulletMainShip");
-            bulletV.y *= -1;
-            reloadInterval = 0.2f;
-        }
-
-        bulletV.y *= 2000; // костыль
+        this.shotSound = shotSound;
+        this.hitSound = hitSound;
+        this.bulletsAmount = INFINITY_BULLETS;
     }
 
     public boolean shot(Vector2 pos) {
-        if(reloadTimer <= 0) {
+        if(reloadTimer <= 0 && (bulletsAmount > 0 || bulletsAmount == INFINITY_BULLETS)) {
             Bullet bullet = BulletPool.getPool().obtain();
             bullet.set(owner,
-                    textureRegion,
+                    bulletAnimation,
+                    hitAnimation,
+                    hitSound,
                     pos,
                     bulletV,
                     bulletHeight,
+                    bulletHitHeight,
                     null,
                     bulletDamage);
 
-            GameAssets.getInstance().get(GameAssets.shotSound).play();
-
+            shotSound.play();
             reloadTimer = reloadInterval;
+            if(bulletsAmount > 0) {
+                bulletsAmount--;
+            }
             return true;
         }
         return false;
     }
 
     public void update(float delta) {
+        this.pos.mulAdd(v, delta);
+
+        if (getTop() < 0) {
+            alive = false;
+        }
+
         if(reloadTimer > 0) {
             reloadTimer -= delta;
         }
     }
 
+    public void setBulletsAmount(int amount) {
+        bulletsAmount = amount;
+    }
+
+    public int getBulletsAmount() {
+        return bulletsAmount;
+    }
+
+    public void addBullets(int amount) {
+        bulletsAmount += amount;
+    }
+
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public float getValue() {
+        if(bulletsAmount == INFINITY_BULLETS) {
+            return 1;
+        } else {
+            return bulletsAmount;
+        }
+    }
+
+    @Override
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
+    }
+
+    @Override
+    public void set(Object owner, Vector2 pos, Vector2 v, float amount) {
+        this.owner = owner;
+        this.pos.set(pos);
+        this.v.set(v);
+        this.bulletsAmount = (int) amount;
+        this.alive = true;
+    }
+
+    @Override
+    public Object getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(Object owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        if(alive) {
+            this.textureRegion = bulletAnimation.getKeyFrame(0);
+            setHeightProportion(120);
+            super.draw(batch);
+        }
     }
 }

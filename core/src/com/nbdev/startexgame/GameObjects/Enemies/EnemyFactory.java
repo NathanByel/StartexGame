@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.nbdev.startexgame.Assets.GameAssets;
 
+import com.nbdev.startexgame.GameObjects.Weapons.BigWeapon;
+import com.nbdev.startexgame.GameObjects.Weapons.MediumWeapon;
+import com.nbdev.startexgame.GameObjects.Weapons.SmallWeapon;
 import com.nbdev.startexgame.GameObjects.Weapons.Weapon;
 import com.nbdev.startexgame.Pools.EnemyPool;
 import com.nbdev.startexgame.utils.Regions;
@@ -25,15 +28,15 @@ public class EnemyFactory {
     private static final int ENEMY_BIG_HP = 20;
 
     private TextureRegion enemySmallRegion = Regions.split(
-            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy0"),
+            GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("enemy0"),
             1, 2, 2)[0];
 
     private TextureRegion enemyMediumRegion = Regions.split(
-            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy1"),
+            GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("enemy1"),
             1, 2, 2)[0];
 
     private TextureRegion enemyBigRegion = Regions.split(
-            GameAssets.getInstance().get(GameAssets.textureAtlas).findRegion("enemy2"),
+            GameAssets.getInstance().get(GameAssets.mainAtlas).findRegion("enemy2"),
             1, 2, 2)[0];
 
 
@@ -41,6 +44,9 @@ public class EnemyFactory {
     private Vector2 enemyMediumV = new Vector2(0, -0.03f);
     private Vector2 enemyBigV = new Vector2(0, -0.005f);
 
+    private Weapon smallWeapon = new SmallWeapon(null, true);
+    private Weapon mediumWeapon = new MediumWeapon(null, true);
+    private Weapon bigWeapon = new BigWeapon(null, true);
 
     public Enemy getEnemy(Type type) {
         Enemy enemy = EnemyPool.getPool().obtain();
@@ -52,7 +58,7 @@ public class EnemyFactory {
                         enemySmallV,
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP,
-                        Weapon.Type.SMALL_WEAPON
+                        smallWeapon
                 );
                 break;
 
@@ -62,7 +68,7 @@ public class EnemyFactory {
                         enemyMediumV,
                         ENEMY_MEDIUM_HEIGHT,
                         ENEMY_MEDIUM_HP,
-                        Weapon.Type.MEDIUM_WEAPON
+                        mediumWeapon
                 );
                 break;
 
@@ -72,7 +78,7 @@ public class EnemyFactory {
                         enemyBigV,
                         ENEMY_BIG_HEIGHT,
                         ENEMY_BIG_HP,
-                        Weapon.Type.BIG_WEAPON
+                        bigWeapon
                 );
                 break;
         }

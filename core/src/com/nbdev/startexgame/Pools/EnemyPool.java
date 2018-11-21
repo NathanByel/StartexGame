@@ -5,9 +5,6 @@ import com.nbdev.startexgame.GameObjects.Enemies.Enemy;
 public class EnemyPool extends GameObjectsPool<Enemy> {
     private static EnemyPool enemyPool;
 
-    private EnemyPool() {
-    }
-
     @Override
     protected Enemy newObject() {
         return new Enemy();

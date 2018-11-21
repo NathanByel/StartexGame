@@ -48,4 +48,8 @@ public class Sprite extends com.nbdev.startexgame.utils.Rect {
     public void setScale(float scale) {
         this.scale = scale;
     }
+
+    public void setTextureRegion(TextureRegion textureRegion) {
+        this.textureRegion = textureRegion;
+    }
 }
